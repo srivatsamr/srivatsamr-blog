@@ -204,6 +204,11 @@ exclude:
   - _plugins/google-scholar-citations.rb
   - _plugins/hide-custom-bibtex.rb
   - _plugins/inspirehep-citations.rb
+  - # Remove repositories section
+  - _pages/repositories.md
+  - _includes/repository/
+  - # Remove teaching section
+  - _pages/teaching.md
 
 
 keep_files:
