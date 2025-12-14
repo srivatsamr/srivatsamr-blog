@@ -189,36 +189,35 @@ exclude:
   - README.md
   - readme_preview/
   - vendor
-  - # Remove News Section
+  -  # Remove News Section
   - _news/
   - _includes/news.liquid
-  - # Remove projects section
+  -  # Remove projects section
   - _projects/
   - _pages/projects.md
   - _includes/projects.liquid
   - _includes/projects_horizontal.liquid
-  - # Remove publications section
+  -  # Remove publications section
   - _pages/publications.md
   - _includes/bib_search.liquid
   - _includes/selected_papers.liquid
   - _plugins/google-scholar-citations.rb
   - _plugins/hide-custom-bibtex.rb
   - _plugins/inspirehep-citations.rb
-  - # Remove repositories section
+  -  # Remove repositories section
   - _pages/repositories.md
   - _includes/repository/
-  - # Remove teaching section
+  -  # Remove teaching section
   - _pages/teaching.md
-  - # Remove people section
+  -  # Remove people section
   - _pages/profiles.md
   - _layouts/profiles.liquid
-  - # Remove dropdown menu entries
+  -  # Remove dropdown menu entries
   - _pages/dropdown.md
   - _pages/books.md
   - _books/
   - _layouts/book-review.liquid
   - _layouts/book-shelf.liquid
-
 
 keep_files:
   - CNAME
@@ -292,8 +291,8 @@ display_categories: # ["external-services"] # these categories will be displayed
 # -----------------------------------------------------------------------------
 
 scholar:
-#   last_name: [Einstein]
-#   first_name: [Albert, A.]
+  #   last_name: [Einstein]
+  #   first_name: [Albert, A.]
 
   style: apa
   locale: en
@@ -301,10 +300,10 @@ scholar:
   source: /_bibliography/
   bibliography: papers.bib
   bibliography_template: bib
-#   # Note: if you have latex math in your bibtex, the latex filter
-#   # preprocessing may conflict with MathJAX if the latter is enabled.
-#   # See https://github.com/alshedivat/al-folio/issues/357.
-#   bibtex_filters: [latex, smallcaps, superscript]
+  #   # Note: if you have latex math in your bibtex, the latex filter
+  #   # preprocessing may conflict with MathJAX if the latter is enabled.
+  #   # See https://github.com/alshedivat/al-folio/issues/357.
+  #   bibtex_filters: [latex, smallcaps, superscript]
 
   replace_strings: true
   join_strings: true
