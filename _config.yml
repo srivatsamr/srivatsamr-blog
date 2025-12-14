@@ -147,8 +147,8 @@ collections:
   #   defaults:
   #     layout: post
   #   output: true
-  projects:
-    output: true
+  # projects:
+  #   output: true
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
@@ -192,6 +192,12 @@ exclude:
   - # Remove News Section
   - _news/
   - _includes/news.liquid
+  - # Remove projects section
+  - _projects/
+  - _pages/projects.md
+  - _includes/projects.liquid
+  - _includes/projects_horizontal.liquid
+
 keep_files:
   - CNAME
   - .nojekyll
