@@ -209,6 +209,15 @@ exclude:
   - _includes/repository/
   - # Remove teaching section
   - _pages/teaching.md
+  - # Remove people section
+  - _pages/profiles.md
+  - _layouts/profiles.liquid
+  - # Remove dropdown menu entries
+  - _pages/dropdown.md
+  - _pages/books.md
+  - _books/
+  - _layouts/book-review.liquid
+  - _layouts/book-shelf.liquid
 
 
 keep_files:
