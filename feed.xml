@@ -1,1 +1,208 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://www.srivatsamr.com//feed.xml" rel="self" type="application/atom+xml"/><link href="https://www.srivatsamr.com//" rel="alternate" type="text/html" hreflang="en"/><updated>2025-12-15T20:04:37+00:00</updated><id>https://www.srivatsamr.com//feed.xml</id><title type="html">blank</title><subtitle>Personal blog of Srivatsa M R. </subtitle></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://www.srivatsamr.com//feed.xml" rel="self" type="application/atom+xml"/><link href="https://www.srivatsamr.com//" rel="alternate" type="text/html" hreflang="en"/><updated>2026-01-18T13:23:29+00:00</updated><id>https://www.srivatsamr.com//feed.xml</id><title type="html">blank</title><subtitle>Personal blog of Srivatsa M R. </subtitle><entry><title type="html">Expectation Maximization Algorithm</title><link href="https://www.srivatsamr.com//blog/2026/ExpectationMaximization/" rel="alternate" type="text/html" title="Expectation Maximization Algorithm"/><published>2026-01-17T00:00:00+00:00</published><updated>2026-01-17T00:00:00+00:00</updated><id>https://www.srivatsamr.com//blog/2026/ExpectationMaximization</id><content type="html" xml:base="https://www.srivatsamr.com//blog/2026/ExpectationMaximization/"><![CDATA[<p>I’ve been working on a project lately that involved segmenting 2D attribute maps. The catch? I only had labels for a handful of pixels and needed a way to measure how confident the classification actually was. After a bit of digging, I stumbled upon <strong>Gaussian Mixture Models (GMMs)</strong>—they seemed like a perfect, elegant way to get those probabilistic results.</p> <p>I couldn’t find an off-the-shelf version in scikit-learn that handled this specific semi-supervised setup (maybe it’s hiding in there somewhere!), but I actually saw that as a win. I really wanted to get under the hood of the math, and there’s no better way to learn than by building it yourself. So, here’s my attempt at breaking down the <strong>EM Algorithm</strong> as intuitively as possible, along with the resources that helped me along the way.</p> <h1 id="the-problem">The problem</h1> <p>Say we are dealing with some data and each data point is associated with a random variable that we <em>don’t</em> observe. We call them <strong>Latent variables</strong>. For example (See Table 1), imagine I collected the data for heights of individuals in my locality but didn’t manage to record the gender or age of the individual. And for the sake of simplicity, let’s assume I know that my data clusters into three categories: men, women and children (class labels $\in [Man, Woman, Child]$). The goal is to get a probablistic classification for each data point: <em>What is the probability that this data point belongs to the men category?</em></p> <table style="margin: 0 auto;"> <thead> <tr> <th style="text-align: center">Idx</th> <th style="text-align: center">Height</th> <th style="text-align: center">Class</th> </tr> </thead> <tbody> <tr> <td style="text-align: center">0</td> <td style="text-align: center">$x_1$</td> <td style="text-align: center">? ($z_1$)</td> </tr> <tr> <td style="text-align: center">1</td> <td style="text-align: center">$x_2$</td> <td style="text-align: center">? ($z_2$)</td> </tr> <tr> <td style="text-align: center">…</td> <td style="text-align: center">…</td> <td style="text-align: center">…</td> </tr> <tr> <td style="text-align: center">N-1</td> <td style="text-align: center">$x_{N-1}$</td> <td style="text-align: center">? ($z_{N-1}$)</td> </tr> </tbody> </table> <figure style="text-align: center;"> <figcaption style="margin-top: 10px;"> Table 1: Dataset with latent variables $z_i$. </figcaption> </figure> <p>So the task at hand is to estimate $P(z \mid x_i)$.</p> <h1 id="parametric-distributions-and-maximum-likelihood-estimates">Parametric distributions and maximum likelihood estimates</h1> <p>Let’s assume that the full data, $x, z$ is distributed according to the probability distribution $P(x, z ; \theta)$, that is the distribution is defined with parameters $\theta$ (eg. mean and variance). In Bayesian terms, $P(x, z ; \theta)$ is the <em>joint probability</em> of observing the full data given the parameters $\theta$. Since we don’t observe the latent variables, we aim to maximize $P(x ; \theta)$ i.e. <em>Evidence</em> w.r.t latent variables.</p> <p>Assuming independent and identially sampled data points, the Evidence is given by:</p> \[\text{Evidence} = \Pi_{i=0}^{N-1} P(x_i ; \theta)\] <p>Handling sums is much easier than handling products. Since logarithm is a monotonically increasing function, maximizing the evidence is same as maximizing logarithm of the evidence.</p> \[\begin{aligned} log(\text{Evidence}) &amp;= log(\Pi_{i=0}^{N-1} P(x_i ; \theta)) \\ &amp;= \sum_{i=0}^{N-1}log(P(x_i ; \theta)) \end{aligned}\] <p>Writing the evidence in terms of joint probability distribution:</p> \[\sum_{i=0}^{N-1}log(P(x_i ; \theta)) = \sum_{i=0}^{N-1}log(\int P(x_i, z ; \theta) dz)\] <p>Estimating the parameters thus is an optimization problem:</p> \[\begin{aligned} \theta &amp;= \operatorname*{argmax}_{\theta} \text{(Evidence)} \\ &amp;= \operatorname*{argmax}_{\theta} \sum_{i=0}^{N-1}log(\int P(x_i, z ; \theta) dz) \end{aligned}\] <p>Solving this optimization problem requires computing gradient of the objective, the Log Evidence (LE) with respect to the parameters and setting the gradient to zero. (first order optimality condition)</p> <p>Let’s see what this entails:</p> \[\begin{aligned} \nabla_\theta \text{LE} &amp;= \nabla_\theta(\sum_{i=0}^{N-1}log(\int P(x_i, z ; \theta) dz)) \\ &amp;= \sum_{i=0}^{N-1} \nabla_\theta log(\int P(x_i, z ; \theta) dz) \\ &amp;= \sum_{i=0}^{N-1} \frac{\nabla_\theta \int P(x_i, z ; \theta) dz}{\int P(x_i, z ; \theta)dz} \\ &amp;= \sum_{i=0}^{N-1} \frac{\int \nabla_\theta P(x_i, z ; \theta) dz}{\int P(x_i, z ; \theta)dz} \end{aligned}\] <p>$\nabla_\theta \text{LE}$ is a vector as $\theta = [\theta_0, \theta_1, … \theta_K]$. In many probability models, $P$ usually take exponential forms. In the above setting, the form fo the gradient is very cumbersome. Setting the gradient to 0 leaves us with K equations where each equation has all of the integrals and the resulting system is highly coupled, most definitely non-linear.</p> <h1 id="surrogate-objective---evidence-lower-bounds-elbo">Surrogate Objective - Evidence Lower Bounds (ELBO)</h1> <p>The problem above is that we end up with log of integrals. In order to simplify the optimization problem, we find a surrogate objective maximizing which results in the same parameters as the original objective.</p> <p>A little mathematical manipulation coming up.</p> <p>So we have the following objective:</p> \[\sum_{i=0}^{N-1}log(\int P(x_i, z ; \theta) dz)\] <p>Consider the integral: $\int P(x_i, z ; \theta) dz$. If we take an arbitrary probability distribution over $z$, we can re-write this as:</p> \[\begin{aligned} \int P(x_i, z ; \theta)dz &amp;= \int \frac{P(x_i, z ; \theta)}{q(z)}q(z)dz \\ &amp;= \mathbb{E}_{z\sim q(z)}[\frac{P(x_i, z ; \theta)}{q(z)}] \end{aligned}\] <p>So we can write LE as:</p> \[\text{LE} = \sum_{i=0}^{N-1}log(\mathbb{E}_{z\sim q(z)}[\frac{P(x_i, z ; \theta)}{q(z)}])\] <p>From here, we can use <a href="https://www.statlect.com/fundamentals-of-probability/Jensen-inequality">Jensen’s inequality</a> and considering the fact that logarithm is a concave function, we have:</p> \[log(\mathbb{E}[X]) \geq \mathbb{E}[log(X)]\] <p>that leads to the inequality:</p> \[\text{LE} \geq \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(x_i, z ; \theta)}{q(z)})]\] <p>Given this <em>Evidence Lower Bound (ELBO)</em>, maximing it with respect to $\theta$ also maximizes LE.</p> <p>Let’s see if the gradient of ELBO is any easier:</p> \[\begin{aligned} \nabla_\theta \text{ELBO} &amp;= \nabla_\theta \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(x_i, z ; \theta)}{q(z)})] \\ &amp;= \nabla_\theta \sum_{i=0}^{N-1}\int log(\frac{P(x_i, z; \theta)}{q(z)})q(z)dz \\ &amp;= \sum_{i=0}^{N-1}\int \nabla_\theta [log(\frac{P(x_i, z; \theta)}{q(z)})q(z)]dz \\ &amp;= \sum_{i=0}^{N-1}\int \nabla_\theta log(P(x_i, z; \theta))q(z)dz \text{ -&gt; as q(z) is independent of } \theta \end{aligned}\] <p>And as noted above, $P$ is usually modeled with exponentials (eg. Gaussian) in which case $log(P)$ simplifies, and the system of equations become relatively easy to solve.</p> <p>Now let’s re-write the ELBO to reveal an interesting insight.</p> \[\begin{aligned} \text{ELBO} &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(x_i, z ; \theta)}{q(z)})] \\ &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)P(x_i; \theta)}{q(z)})] \\ &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)}) + log(P(x_i; \theta))] \\ &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)})] + \mathbb{E}_{z\sim q(z)}[log(P(x_i; \theta))] \text{ -&gt; independent of } z\\ &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)})] + \sum_{i=0}^{N-1}log(P(x_i; \theta))\\ &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)})] + log(\text{Evidence}) \end{aligned}\] <p>Awesome!</p> <p>We have:</p> \[\text{ELBO} = \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)})] + \text{LE}\] <p>and</p> \[\begin{aligned} \text{LE} &amp;\geq \text{ELBO} \\ \implies \text{LE} &amp;= \text{ELBO} + \text{GAP} \\ \implies \text{GAP} &amp;= -\sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)})] \\ &amp;= \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{q(z)}{P(z\mid x_i; \theta)})] \end{aligned}\] <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/post/2026-01-17_1-480.webp 480w,/assets/img/post/2026-01-17_1-800.webp 800w,/assets/img/post/2026-01-17_1-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/assets/img/post/2026-01-17_1.png" class="rounded z-depth-1 mx-auto d-block" width="500px" height="auto" title="LE = ELBO + GAP" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> <figcaption class="caption">Visualizing ELBO</figcaption> </figure> <h1 id="the-gap">The GAP</h1> <p>If we analyse the GAP term:</p> \[\text{GAP} = \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{q(z)}{P(z\mid x_i; \theta)})]\] <p>and use Jensen’s inequality, we get:</p> \[\begin{aligned} \text{GAP} &amp;\leq \sum_{i=0}^{N-1}log(\mathbb{E}_{z \sim q(z)}[\frac{q(z)}{P(z \mid x_i; \theta)}]) \\ &amp;\geq \sum_{i=0}^{N-1}log(\mathbb{E}_{z \sim q(z)}[\frac{P(z \mid x_i; \theta)}{q(z)}] \\ \text{GAP} &amp; \geq \sum_{i=0}^{N-1}log(\int \frac{P(z \mid x_i; \theta)}{q(z)} q(z) dz) = 0\\ \end{aligned}\] <p>as $\int P(z \mid x_i; \theta) dz = 1$ and $log(1) = 0$</p> <p>P.S. The GAP is also called <a href="https://www.statlect.com/fundamentals-of-probability/Kullback-Leibler-divergence">KL divergence</a>.</p> <p>The GAP = 0 when $q(z) = P(z \mid x_i; \theta)$, i.e. when $q(z)$ is equal to the <em>posterior</em> distribution.</p> <h1 id="coordinate-ascent">Coordinate Ascent</h1> <p>Without going into much details, its intuitive to see that to maximize the Evidence w.r.t $\theta$, we can first assume $\theta$ is constant and minimize the GAP, that is choose $q(z)$ to be posterior with fixed $\theta$ and then fix $q(z)$ to maximize the ELBO w.r.t $\theta$.</p> <p>Here is an image from a nice reference <a href="https://mbernste.github.io/posts/em/">1</a>, to demonstrate this, where the simpler curve is ELBO and the curve on top is the Evidence:</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/post/2026-01-17_2-480.webp 480w,/assets/img/post/2026-01-17_2-800.webp 800w,/assets/img/post/2026-01-17_2-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/assets/img/post/2026-01-17_2.png" class="rounded z-depth-1 mx-auto d-block" width="500px" height="auto" title="Coordinate Ascent in EM algorithm" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> <figcaption class="caption">Coordinate Ascent</figcaption> </figure> <h1 id="wrapping-up">Wrapping up</h1> <p>In order for us to be able to compute things tractably, we need the posterior to be analytic. For GMM classification problem, we can get the posterior using a categorical prior and gaussian likelihood i.e. $z$ follows categorical distribution and given $z$, $x$ follows a normal distribution parametrised with some mean and covariance. EM algorithm is a good cadidate to solve such problems. For semi-supervised settings, the user provided labels set the categorical distribution for those particular data points and EM algorithm optimises for the remainder of parameters in the model.</p>]]></content><author><name></name></author><category term="statistics"/><category term="probability"/><category term="ml"/><category term="math"/><category term="theory"/><summary type="html"><![CDATA[Intuitive derivation]]></summary></entry><entry><title type="html">Setting up project in VS Code for C++ CUDA development</title><link href="https://www.srivatsamr.com//blog/2026/CppCUDAProjectStructure/" rel="alternate" type="text/html" title="Setting up project in VS Code for C++ CUDA development"/><published>2026-01-04T00:00:00+00:00</published><updated>2026-01-04T00:00:00+00:00</updated><id>https://www.srivatsamr.com//blog/2026/CppCUDAProjectStructure</id><content type="html" xml:base="https://www.srivatsamr.com//blog/2026/CppCUDAProjectStructure/"><![CDATA[<h1 id="gpus-and-cuda-programming">GPUs and CUDA programming</h1> <p>Everyone either wants, needs or has GPUs now. My workplace has already acquired several powerful NVIDIA GPUs and plans to expand the capacity further. While most of the demand for GPUs in the industry is for machine learning applications, a small fraction of the demand is also coming from the scientific computing community, especially in high-performance computing centres, as they add significantly to the compute capacity of the centre. With GPUs almost everywhere around me, as a computational scientist, I need to understand them better than just using high-level frameworks. And my work involves more than just machine learning. So I decided to go beyond PyTorch or TensorFlow and delve deeper into GPU programming, understanding its architecture, programming patterns, and code optimisation. I am about to complete a GPU specialisation course on Coursera (I will review once I am done), and it’s time for me to set up a project structure to use as a template for any C++ CUDA projects.</p> <h1 id="the-development-environment">The Development Environment</h1> <p>Here is the bash script to setup the development environment on Ubuntu (assuming the NVIDIA drivers are already installed)</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/bash
+
+# Update system
+sudo apt update &amp;&amp; sudo apt upgrade -y
+
+# Install build essentials
+sudo apt -y install build-essential
+
+# Download the specific keyring for Ubuntu 24.04
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+
+# Install the keyring
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+
+# Update your local repository cache
+sudo apt-get update
+
+sudo apt-get -y install cuda-toolkit
+</code></pre></div></div> <p>Then add the following to your <code class="language-plaintext highlighter-rouge">~/.bashrc</code>:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+</code></pre></div></div> <p>Either source <code class="language-plaintext highlighter-rouge">~/.bashrc</code> or open a new terminal to verify installation with:</p> <ul> <li><code class="language-plaintext highlighter-rouge">nvidia-smi</code></li> <li><code class="language-plaintext highlighter-rouge">nvcc --version</code></li> <li><code class="language-plaintext highlighter-rouge">cuda-gdb --version</code></li> </ul> <h2 id="vs-code-setup">VS Code setup</h2> <p>Install the following extensions:</p> <ul> <li><a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack">C++ Extension Pack</a></li> <li><a href="https://marketplace.visualstudio.com/items?itemName=NVIDIA.nsight-vscode-edition">Nsight Visual Studio Code Edition</a></li> </ul> <h1 id="the-project-structure">The Project Structure</h1> <p>After some trial and error, I ended up setting up my project as follows (toy example):</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>├── CHANGELOG.md
+├── CMakeLists.txt
+├── LICENSE.txt
+├── README.md
+├── data
+├── include
+│   └── dAdd.hpp
+├── src
+│   ├── CMakeLists.txt
+│   ├── api
+│   │   └── dAdd.cu
+│   └── kernels
+│       ├── add.cu
+│       └── add.hpp
+└── test
+    ├── CMakeLists.txt
+    └── test_kernel.cpp
+</code></pre></div></div> <p>The structure needs some explanation:</p> <ul> <li>A C++ CUDA code consists of kernels which are the parallel parts of the code that each thread in the GPU executes.</li> <li>These kernels are called by the host side functions</li> </ul> <p>When compiling a C++ code, the header files are literal insertions of code snippets into the file that includes them, and the src files are used to create the build objects. All CUDA source files must have <code class="language-plaintext highlighter-rouge">.cu</code>extension. If not, plain <code class="language-plaintext highlighter-rouge">.cpp</code>files are compiled by <code class="language-plaintext highlighter-rouge">CXX</code>compiler which will fail when it encounters code sections with things like <code class="language-plaintext highlighter-rouge">__global__</code>, <code class="language-plaintext highlighter-rouge">&lt;&lt;&lt;&gt;&gt;&gt;</code>, and other CUDA specific syntax. In my current structure, I separate the kernels from the API. Kernels are called by functions in the API which are exposed to the user of the library.</p> <p>The tests are linked to my developed library and it can be just <code class="language-plaintext highlighter-rouge">.cpp</code>files as tests don’t have any CUDA syntax (the header of the library API doesn’t have any CUDA code. To achieve this, its important to note that all the headers needed for implementation must be included in the cpp file and not header file). They instead use the host API to delegate work to the GPU.</p> <h1 id="cmakelists-templates">CMakeLists templates</h1> <h2 id="root">root:</h2> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake_minimum_required(VERSION 3.20)
+project(SSALib LANGUAGES CXX CUDA)
+
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CUDA_NVCC_FLAGS "-g -G")
+endif()
+
+# -----------------------------
+# Build the library
+# -----------------------------
+add_subdirectory(src)
+
+# -----------------------------
+# Optional testing
+# -----------------------------
+include(CTest)
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
+
+# -----------------------------
+# Package config/version (for find_package)
+# -----------------------------
+include(CMakePackageConfigHelpers)
+
+# Version file
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/SSALibConfigVersion.cmake"
+    VERSION 0.1.0
+    COMPATIBILITY AnyNewerVersion
+)
+
+# Install top-level config file
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/SSALibConfigVersion.cmake"
+    DESTINATION lib/cmake/SSALib
+)
+</code></pre></div></div> <h2 id="src">src:</h2> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -----------------------------
+# Collect source files automatically
+# -----------------------------
+# Host-side implementation
+file(GLOB_RECURSE HOST_SOURCES
+    CONFIGURE_DEPENDS
+    api/*.cu
+)
+
+# CUDA kernels
+file(GLOB_RECURSE KERNEL_SOURCES
+    CONFIGURE_DEPENDS
+    kernels/*.cu
+)
+
+set(LIB_SOURCES
+    ${HOST_SOURCES}
+    ${KERNEL_SOURCES}
+)
+
+# -----------------------------
+# Create library
+# -----------------------------
+add_library(ssalib STATIC ${LIB_SOURCES})
+
+target_compile_features(ssalib PUBLIC cxx_std_17)
+
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    message(STATUS "Building ssalib in Debug mode")
+    target_compile_options(ssalib
+        PRIVATE
+            $&lt;$&lt;AND:$&lt;CONFIG:Debug&gt;,$&lt;COMPILE_LANGUAGE:CUDA&gt;&gt;: -g -G -O0&gt;
+            $&lt;$&lt;AND:$&lt;CONFIG:Debug&gt;,$&lt;COMPILE_LANGUAGE:CXX&gt;&gt;: -g -O0&gt;
+    )
+else()
+    message(STATUS "Building ssalib in Release mode")
+endif()
+
+# Enable CUDA separable compilation for kernels
+set_target_properties(ssalib PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+    POSITION_INDEPENDENT_CODE ON
+)
+
+# Include directories
+target_include_directories(ssalib
+    PUBLIC
+        $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include&gt;
+        $&lt;INSTALL_INTERFACE:include&gt;
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}   # api/ and kernels/ for internal compilation
+)
+
+# -----------------------------
+# Install library and headers
+# -----------------------------
+install(TARGETS ssalib
+    EXPORT ssalibTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+)
+
+# Install public headers
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../include/
+    DESTINATION include
+)
+
+# Export targets for find_package
+install(EXPORT ssalibTargets
+    FILE ssalibTargets.cmake
+    NAMESPACE ssalib::
+    DESTINATION lib/cmake/ssalib
+)
+
+</code></pre></div></div> <h2 id="test">test</h2> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.8.1 # or a later release
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+# Automatically pick up all test cpp files
+file(GLOB_RECURSE TEST_SOURCES
+    CONFIGURE_DEPENDS
+    *.cpp
+)
+
+add_executable(tests ${TEST_SOURCES})
+
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    message(STATUS "Building tests in Debug mode")
+    target_compile_options(tests
+        PRIVATE
+            $&lt;$&lt;AND:$&lt;CONFIG:Debug&gt;,$&lt;COMPILE_LANGUAGE:CXX&gt;&gt;:-g -O0&gt;
+    )
+else()
+    message(STATUS "Building tests in Release mode")
+endif()
+
+
+target_link_libraries(tests
+    PRIVATE
+        ssalib
+        Catch2::Catch2WithMain
+)
+
+include(Catch)
+catch_discover_tests(tests)
+</code></pre></div></div> <h2 id="notes">Notes:</h2> <ul> <li>Organising CUDA code into multiple files is good for maintainability and extensibility. But to compile them, we need to use <code class="language-plaintext highlighter-rouge">CUDA_SEPARABLE_COMPILATION</code> and <code class="language-plaintext highlighter-rouge">POSITION_INDEPENDENT_CODE</code>.</li> <li><code class="language-plaintext highlighter-rouge">CUDA_SEPARABLE_COMPILATION</code> allows code units in one <code class="language-plaintext highlighter-rouge">.cu</code> files to call functions from other <code class="language-plaintext highlighter-rouge">.cu</code> files. But this comes with some overhead. Particularly, extra registers get used when separable compilation is used. If we really care about performance, we should put all the code that is required by a <code class="language-plaintext highlighter-rouge">.cu</code> locally. Since perrformance is the primary objective, NVIDIA has made it an option instead of making it the default behavior</li> <li>For debugging, CUDA code requies <code class="language-plaintext highlighter-rouge">-G</code> flag. So add both <code class="language-plaintext highlighter-rouge">-g</code> and <code class="language-plaintext highlighter-rouge">-G</code> to debug host and device code</li> </ul> <h1 id="setting-up-debugger-for-cuda-in-vs-code">Setting up debugger for CUDA in VS Code</h1> <p>The Nsight Visual Studio Code Edition extension provides the necessary interface to debug CUDA code. We need to create a launch configuration to enable this debugging. See <a href="https://docs.nvidia.com/nsight-visual-studio-code-edition/latest/cuda-debugger/index.html">this</a>. I have a launch configuration as follows:</p> <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CUDA C++: Launch"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cuda-gdb"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${command:cmake.launchTargetPath}"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"stopAtEntry"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CUDA C++: Attach"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cuda-gdb"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"attach"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div> <p>You can then set break points in the editor and start debugging.</p> <h2 id="note">Note:</h2> <p>When using CMakeTools extension, we get build and debug tool icons in the bottom bar of VS Code. That debug doesn’t launch CUDA debugger. Instead, use the <code class="language-plaintext highlighter-rouge">Select and Start Debug Configuration</code></p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/post/2026-01-04_1-480.webp 480w,/assets/img/post/2026-01-04_1-800.webp 800w,/assets/img/post/2026-01-04_1-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/assets/img/post/2026-01-04_1.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="VS Code CUDA debugging" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> <figcaption class="caption">Launch CUDA debugger using the launch configuration</figcaption> </figure> <p>We can then step through the code as usual. The difference between CUDA debugger and regular debugger is that it allows us to set focus on a particular thread when we are within the kernel. This is an incredibly useful feature. See the image below:</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/post/2026-01-04_2-480.webp 480w,/assets/img/post/2026-01-04_2-800.webp 800w,/assets/img/post/2026-01-04_2-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/assets/img/post/2026-01-04_2.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Changing the focus to a particular thread" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> <figcaption class="caption">CUDA debugger focus</figcaption> </figure> <h1 id="done">Done!</h1> <p>With this, we have a basic project setup. I hope to experiment with profiling the CUDA code in my project and documenting it here sometime.</p>]]></content><author><name></name></author><category term="dev"/><category term="c++"/><summary type="html"><![CDATA[Dependencies, directory structure, extensions and sample program]]></summary></entry></feed>

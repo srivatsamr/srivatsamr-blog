@@ -23,7 +23,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{
+        },{id: "post-expectation-maximization-algorithm",
+        
+          title: "Expectation Maximization Algorithm",
+        
+        description: "Intuitive derivation",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/ExpectationMaximization/";
+          
+        },
+      },{id: "post-setting-up-project-in-vs-code-for-c-cuda-development",
+        
+          title: "Setting up project in VS Code for C++ CUDA development",
+        
+        description: "Dependencies, directory structure, extensions and sample program",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/CppCUDAProjectStructure/";
+          
+        },
+      },{
         id: 'social-cv',
         title: 'CV',
         section: 'Socials',

@@ -1,0 +1,21 @@
+[workspace]
+channels = ["conda-forge"]
+name = "srivatsamr-blog"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+setup = "gem install bundler jekyll && bundle install"
+serve = "bundle exec jekyll serve"
+serve-drafts = "bundle exec jekyll serve --drafts"
+
+[dependencies]
+compilers = "*"
+make = "*"
+pkg-config = "*"
+libffi = "*"
+zlib = "*"
+openssl = "*"
+ruby = "*"
+imagemagick = "*"
+nodejs = "*"
