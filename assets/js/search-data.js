@@ -10,20 +10,31 @@ ninja.data = [{
       window.location.href = "/";
     },
   },{id: "nav-blog",
-          title: "blog",
+          title: "Blog",
           description: "",
           section: "Navigation",
           handler: () => {
             window.location.href = "/blog/";
           },
         },{id: "nav-cv",
-          title: "cv",
+          title: "CV",
           description: "",
           section: "Navigation",
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-expectation-maximization-algorithm",
+        },{id: "post-kriging-and-simulation-in-geostatistics",
+        
+          title: "Kriging and Simulation in Geostatistics",
+        
+        description: "A mathematical derivation",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/GaussianSimulation/";
+          
+        },
+      },{id: "post-expectation-maximization-algorithm",
         
           title: "Expectation Maximization Algorithm",
         
