@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-kriging-and-simulation-in-geostatistics",
+        },{id: "post-getting-into-interpretability-a-potential-all-consuming-side-project",
+        
+          title: "Getting into Interpretability - A potential all consuming side-project",
+        
+        description: "The Why",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/GettingIntoInterpretability/";
+          
+        },
+      },{id: "post-kriging-and-simulation-in-geostatistics",
         
           title: "Kriging and Simulation in Geostatistics",
         
