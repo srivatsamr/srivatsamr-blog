@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-getting-into-interpretability-a-potential-all-consuming-side-project",
+        },{id: "post-building-a-transformer",
+        
+          title: "Building a Transformer",
+        
+        description: "A visual summary and important notes",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/BuildingATransformer/";
+          
+        },
+      },{id: "post-getting-into-interpretability-a-potential-all-consuming-side-project",
         
           title: "Getting into Interpretability - A potential all consuming side-project",
         
