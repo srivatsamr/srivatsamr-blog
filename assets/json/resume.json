@@ -60,7 +60,7 @@
     {
       "title": "Best Overall MSc ACSE Student, 2022-2023",
       "date": "January 2024",
-      "awarder": "Deparment of Earth Science and Engineering, Imperial College London"
+      "awarder": "Department of Earth Science and Engineering, Imperial College London"
     },
     {
       "title": "Best Over All Performer among Undergraduate Programmes, 2014-2018",
@@ -72,9 +72,16 @@
     {
       "name": "Optimal Impulsive Maneuver Planning for Station Acquisition of Geosynchronous Satellites",
       "publisher": "Springer Nature Singapore",
-      "releaseDate": "2022-07-25",
-      "url": "https://link.springer.com/chapter/10.1007/978-981-19-3938-9_8",
+      "releaseDate": "July 2022",
+      "url": "https://doi.org/10.1007/978-981-19-3938-9_8",
       "summary": "Formulated station acquisition of geosynchronous satellites as an orbit reconfiguration problem using linearized relative oribital element dynamics and solved it using Differential Evolution followed by a constrained local optimization algorithm. "
+    },
+    {
+      "name": "Pore-scale reactive transport for assessing permeability changes on CO2 capture and storage",
+      "publisher": "Applied Geochemistry",
+      "releaseDate": "March 2026",
+      "url": "https://doi.org/10.1016/j.apgeochem.2026.106728",
+      "summary": "We developed a high fidelity 3D pore-scale reactive transport (PSRT) simulator using a generalized rate law that can be extended to any mineral for simulating the evolving pore geometry of a digital rock due to dissolution and precipitation reactions within the rock."
     }
   ],
   "skills": [
