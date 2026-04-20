@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-building-a-transformer",
+        },{id: "post-consistency-beats-short-sprints-over-a-long-run",
+        
+          title: "Consistency beats short sprints over a long run",
+        
+        description: "An entry to remind my future self that planning and consistency beats over-enthusiastic sprints",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/ConsistencyBeatsSprint/";
+          
+        },
+      },{id: "post-building-a-transformer",
         
           title: "Building a Transformer",
         
