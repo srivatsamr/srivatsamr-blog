@@ -103,7 +103,11 @@ $$\mathbf{y}_i = F_i(\mathbf{y}_{i-1}), \quad i = 1, \ldots, N, \quad \mathbf{y}
 
 $$\frac{\partial \mathbf{y}_N}{\partial \mathbf{W}_k} = \left(\prod_{i=k+1}^{N} \frac{\partial \mathbf{y}_i}{\partial \mathbf{y}_{i-1}}\right) \frac{\partial \mathbf{y}_k}{\partial \mathbf{W}_k}$$
 
-Each of $\frac{\partial \mathbf{y}_i}{\partial \mathbf{y}_{i-1}}$ is the Jacobian matrix. Often, the singular values of this Jacobian matrix have values $<$ 1, and multiplying several such matrices shrinks the magnitude of the gradient for deep architectures. So the training becomes ineffective - small gradients, no significant updates. To deal with this, we use residual terms:
+Each of
+
+$$\frac{\partial \mathbf{y}_i}{\partial \mathbf{y}_{i-1}}$$
+
+is the Jacobian matrix. Often, the singular values of this Jacobian matrix have values $<$ 1, and multiplying several such matrices shrinks the magnitude of the gradient for deep architectures. So the training becomes ineffective - small gradients, no significant updates. To deal with this, we use residual terms:
 
 $$\mathbf{y}_i = \mathbf{y}_{i-1} + F_i(\mathbf{y}_{i-1})$$
   
