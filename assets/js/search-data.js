@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-consistency-beats-short-sprints-over-a-long-run",
+        },{id: "post-learning-linear-and-independent-structures-a-guided-journey",
+        
+          title: "Learning Linear and Independent Structures — A Guided Journey",
+        
+        description: "A conversational record of working through Chapter 2 of the Berkeley Deep Representation Learning book — PCA, Dictionary Learning, and the mathematics behind them.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/PCAandDictionaryLearning/";
+          
+        },
+      },{id: "post-consistency-beats-short-sprints-over-a-long-run",
         
           title: "Consistency beats short sprints over a long run",
         
