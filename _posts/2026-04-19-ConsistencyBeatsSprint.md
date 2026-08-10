@@ -3,7 +3,8 @@ layout: post
 title: Consistency beats short sprints over a long run
 date: 2026-04-19
 description: An entry to remind my future self that planning and consistency beats over-enthusiastic sprints
-categories: life journal retrospection
+categories: journal
+tags: [reflection]
 ---
 
 Towards the end of February 2026, I was on instagram and came across an advertisement by [Cancer Research UK](https://www.cancerresearchuk.org/) asking people to take up a challenge for the month of March where we would have to run 5k for ten days over the month to spread awareness and if possible raise donations. Now I was not sure if I could raise donations for them but something told me I should take up this challenge. So I made a donation myself, they sent over a T-Shirt for me and I decided to use March as the month to improve my running and stamina. I play football once a week at work but I am no longer as fast or as active as I used be when I was 21. So time to change that!

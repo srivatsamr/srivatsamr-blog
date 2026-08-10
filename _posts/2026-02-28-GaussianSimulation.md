@@ -4,7 +4,8 @@ title: Kriging and Simulation in Geostatistics
 date: 2026-02-28
 description: A mathematical derivation
 pretty_rable: true
-categories: statistics probability math theory geostatistics
+categories: statistics
+tags: [geostatistics, probability, math-derivation]
 ---
 
 One of the many things I like about being a computational scientist is that I get exposed to many fields working on interdisciplinary projects. Recently, for a R&D project, I stumbled upon geostatistics in my literature review work. I went down the road of deriving the mathematics behind the concepts I was reading about and my intention here is to derive things from a basic level (sometimes too basic just to recollect the foundational maths) to the level required to work in the field confidently. I found [this](https://geostatsguy.github.io/GeostatsPyDemos_Book/intro.html) book very helpful to understand basic concepts. Highly recommend if you are interested in geostatistics.

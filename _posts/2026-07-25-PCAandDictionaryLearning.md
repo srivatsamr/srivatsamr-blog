@@ -3,8 +3,8 @@ layout: post
 title: "Learning Linear and Independent Structures — A Guided Journey"
 date: 2026-07-25
 description: A conversational record of working through Chapter 2 of the Berkeley Deep Representation Learning book — PCA, Dictionary Learning, and the mathematics behind them.
-tags: [math, machine-learning, linear-algebra, learning-journal]
-categories: learning
+categories: machine-learning
+tags: [linear-algebra, learning-journal]
 toc:
   sidebar: left
 ---

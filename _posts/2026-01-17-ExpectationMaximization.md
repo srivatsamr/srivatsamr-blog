@@ -4,7 +4,8 @@ title: Expectation Maximization Algorithm
 date: 2026-01-17
 description: Intuitive derivation
 pretty_rable: true
-categories: statistics probability ml math theory
+categories: statistics
+tags: [probability, machine-learning, math-derivation]
 ---
 
 I’ve been working on a project lately that involved segmenting 2D attribute maps. The catch? I only had labels for a handful of pixels and needed a way to measure how confident the classification actually was. After a bit of digging, I stumbled upon **Gaussian Mixture Models (GMMs)**—they seemed like a perfect, elegant way to get those probabilistic results.

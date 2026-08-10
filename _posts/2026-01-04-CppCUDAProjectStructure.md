@@ -3,7 +3,8 @@ layout: post
 title: Setting up project in VS Code for C++ CUDA development
 date: 2026-01-04
 description: Dependencies, directory structure, extensions and sample program
-categories: dev c++
+categories: software-engineering
+tags: [c++, cuda, dev-environment]
 ---
 
 # GPUs and CUDA programming

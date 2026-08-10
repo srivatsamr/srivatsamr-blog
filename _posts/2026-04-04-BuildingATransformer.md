@@ -3,11 +3,10 @@ layout: post
 title: Building a Transformer
 date: 2026-04-04
 description: A visual summary and important notes 
-categories: interpretability ai 
+categories: machine-learning
+tags: [interpretability, transformers, deep-learning]
 bibliography: papers.bib
 ---
-
-I found this curriculum called [ARENA](https://www.arena.education/) that takes you through the foundations to get into Mechanistic Interpretability. It's very well organised and I decided to start with the implementation of a transformer from scratch. While I have worked with models using attention mechanism before for my work (vision transformer backbone for diffusion models), I decided it will be worth to dive deep into the implementation of a transformer model and gain a good understanding and control over the model so that I can slice and dice it when I start to work on interpretability. My attempt here is NOT to recap the full theory or implementation but to record a summary and major things I learnt on the way that I might actually forget if not consciously recorded. I learn well if I write good notes, draw diagrams and explain the topic to someone in simple terms.
 
 ## The Visual Summary of a Transformer
 
@@ -306,9 +305,7 @@ $$
 
 We now have a model architecture and the loss function to train it. Since transformers predict the conditional probability distribution as each position in the sequence, it is very efficient to train them. At inference time however, we only need the logits corresponding to the last token in the sequence to predict the next token.
 
-We therefore have the basic components and the next step would be to train this model. For interpretability research, it usually beneficial to train a small model on some fairly trivial dataset (mostly synthetic). We can then use our understanding of the dataset, how we humans approach it and investigate the model parameters to reverse engineer the algorithm that the models ends up learning. I came across a paper on open problems in mechanistic interpretability {% cite sharkey_open_nodate %} from Jan 2025. Although it is an year old, it has a nice summary of the field and I plan to read it next. I find following a curriculum very boring and prefer learning things as and when required much more practical and interesting, especially given I have *some* experience with deeep learning. I have implemented the transformer model but have not setup the training yet.
-
-I will be spending some time reading foundational papers in this field and my next posts will mostly be about that.
+We therefore have the basic components and the next step would be to train this model.
 
 See you in the next one.
 
