@@ -13,7 +13,7 @@ On the first attempt, I said to myself: "Let me try to be as quick as I can to s
 
 I went back home and was angry at my physical state. I thought I was better than this. Surely my stamina couldn't be this bad?! I must be doing something wrong.
 
-So I did some reading and as usual, the internet overwhelmed me with information. For a beginner, suggestions relating to the running form, stride etc seem like too much detail. But amongst all that information, I remember reading somewhere: *Slow is fast*!
+So I did some reading and as usual, the internet overwhelmed me with information. For a beginner, suggestions relating to the running form, stride etc seem like too much detail. But amongst all that information, I remember reading somewhere: _Slow is fast_!
 
 And then it clicked. I had exhausted myself trying to be as fast as I can in the first kilometer!
 

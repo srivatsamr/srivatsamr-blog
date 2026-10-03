@@ -13,16 +13,17 @@ I’ve been working on a project lately that involved segmenting 2D attribute ma
 I couldn’t find an off-the-shelf version in scikit-learn that handled this specific semi-supervised setup (maybe it's hiding in there somewhere!), but I actually saw that as a win. I really wanted to get under the hood of the math, and there's no better way to learn than by building it yourself. So, here’s my attempt at breaking down the **EM Algorithm** as intuitively as possible, along with the resources that helped me along the way.
 
 # The problem
-Say we are dealing with some data and each data point is associated with a random variable that we *don't* observe. We call them **Latent variables**. For example (See Table 1), imagine I collected the data for heights of individuals in my locality but didn't manage to record the gender or age of the individual. And for the sake of simplicity, let's assume I know that my data clusters into three categories: men, women and children (class labels $\in [Man, Woman, Child]$). The goal is to get a probablistic classification for each data point: *What is the probability that this data point belongs to the men category?*
 
+Say we are dealing with some data and each data point is associated with a random variable that we _don't_ observe. We call them **Latent variables**. For example (See Table 1), imagine I collected the data for heights of individuals in my locality but didn't manage to record the gender or age of the individual. And for the sake of simplicity, let's assume I know that my data clusters into three categories: men, women and children (class labels $\in [Man, Woman, Child]$). The goal is to get a probablistic classification for each data point: _What is the probability that this data point belongs to the men category?_
 
-| Idx | Height | Class |
-| :---: | :---: | :---: |
-| 0 | $x_1$ | ? ($z_1$) |
-| 1 | $x_2$ | ? ($z_2$) |
-| ... | ... | ... |
-| N-1 | $x_{N-1}$ | ? ($z_{N-1}$) |
-{: style="margin: 0 auto;"}
+|             Idx             |  Height   |     Class     |
+| :-------------------------: | :-------: | :-----------: |
+|              0              |   $x_1$   |   ? ($z_1$)   |
+|              1              |   $x_2$   |   ? ($z_2$)   |
+|             ...             |    ...    |      ...      |
+|             N-1             | $x_{N-1}$ | ? ($z_{N-1}$) |
+| {: style="margin: 0 auto;"} |
+
 <figure style="text-align: center;">
   <figcaption style="margin-top: 10px;">
     Table 1: Dataset with latent variables $z_i$.
@@ -33,7 +34,7 @@ So the task at hand is to estimate $P(z \mid x_i)$.
 
 # Parametric distributions and maximum likelihood estimates
 
-Let's assume that the full data, $x, z$  is distributed according to the probability distribution $P(x, z ; \theta)$, that is the distribution is defined with parameters $\theta$ (eg. mean and variance). In Bayesian terms, $P(x, z ; \theta)$ is the *joint probability* of observing the full data given the parameters $\theta$. Since we don't observe the latent variables, we aim to maximize $P(x ; \theta)$ i.e. *Evidence* w.r.t latent variables.
+Let's assume that the full data, $x, z$ is distributed according to the probability distribution $P(x, z ; \theta)$, that is the distribution is defined with parameters $\theta$ (eg. mean and variance). In Bayesian terms, $P(x, z ; \theta)$ is the _joint probability_ of observing the full data given the parameters $\theta$. Since we don't observe the latent variables, we aim to maximize $P(x ; \theta)$ i.e. _Evidence_ w.r.t latent variables.
 
 Assuming independent and identially sampled data points, the Evidence is given by:
 
@@ -52,7 +53,6 @@ $$
 Writing the evidence in terms of joint probability distribution:
 
 $$\sum_{i=0}^{N-1}log(P(x_i ; \theta)) = \sum_{i=0}^{N-1}log(\int P(x_i, z ; \theta) dz)$$
-
 
 Estimating the parameters thus is an optimization problem:
 
@@ -110,7 +110,7 @@ that leads to the inequality:
 
 $$\text{LE} \geq \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(x_i, z ; \theta)}{q(z)})]$$
 
-Given this *Evidence Lower Bound (ELBO)*, maximing it with respect to $\theta$ also maximizes LE.
+Given this _Evidence Lower Bound (ELBO)_, maximing it with respect to $\theta$ also maximizes LE.
 
 Let's see if the gradient of ELBO is any easier:
 
@@ -146,7 +146,7 @@ $$
 \text{ELBO} = \sum_{i=0}^{N-1}\mathbb{E}_{z \sim q(z)}[log(\frac{P(z\mid x_i; \theta)}{q(z)})] + \text{LE}
 $$
 
-and 
+and
 
 $$
 \begin{aligned}
@@ -157,12 +157,12 @@ $$
 \end{aligned}
 $$
 
-{% include figure.liquid 
-    path="assets/img/post/2026-01-17_1.png" 
-    class="rounded z-depth-1 mx-auto d-block" 
+{% include figure.liquid
+    path="assets/img/post/2026-01-17_1.png"
+    class="rounded z-depth-1 mx-auto d-block"
     width="500px"
-    title="LE = ELBO + GAP" 
-    caption="Visualizing ELBO" 
+    title="LE = ELBO + GAP"
+    caption="Visualizing ELBO"
 %}
 
 # The GAP
@@ -183,26 +183,24 @@ $$
 
 as $\int P(z \mid x_i; \theta) dz = 1$ and $log(1) = 0$
 
-P.S. The GAP is also called [KL divergence](https://www.statlect.com/fundamentals-of-probability/Kullback-Leibler-divergence). 
+P.S. The GAP is also called [KL divergence](https://www.statlect.com/fundamentals-of-probability/Kullback-Leibler-divergence).
 
-The GAP = 0 when $q(z) = P(z \mid x_i; \theta)$, i.e. when $q(z)$ is equal to the *posterior* distribution.
+The GAP = 0 when $q(z) = P(z \mid x_i; \theta)$, i.e. when $q(z)$ is equal to the _posterior_ distribution.
 
 # Coordinate Ascent
 
-Without going into much details, its intuitive to see that to maximize the Evidence w.r.t $\theta$, we can first assume $\theta$ is constant and minimize the GAP, that is choose $q(z)$ to be posterior with fixed $\theta$ and then fix $q(z)$ to maximize the ELBO w.r.t $\theta$. 
+Without going into much details, its intuitive to see that to maximize the Evidence w.r.t $\theta$, we can first assume $\theta$ is constant and minimize the GAP, that is choose $q(z)$ to be posterior with fixed $\theta$ and then fix $q(z)$ to maximize the ELBO w.r.t $\theta$.
 
 Here is an image from a nice reference [1](https://mbernste.github.io/posts/em/), to demonstrate this, where the simpler curve is ELBO and the curve on top is the Evidence:
 
-
-{% include figure.liquid 
-    path="assets/img/post/2026-01-17_2.png" 
-    class="rounded z-depth-1 mx-auto d-block" 
+{% include figure.liquid
+    path="assets/img/post/2026-01-17_2.png"
+    class="rounded z-depth-1 mx-auto d-block"
     width="500px"
-    title="Coordinate Ascent in EM algorithm" 
-    caption="Coordinate Ascent" 
+    title="Coordinate Ascent in EM algorithm"
+    caption="Coordinate Ascent"
 %}
 
 # Wrapping up
 
 In order for us to be able to compute things tractably, we need the posterior to be analytic. For GMM classification problem, we can get the posterior using a categorical prior and gaussian likelihood i.e. $z$ follows categorical distribution and given $z$, $x$ follows a normal distribution parametrised with some mean and covariance. EM algorithm is a good cadidate to solve such problems. For semi-supervised settings, the user provided labels set the categorical distribution for those particular data points and EM algorithm optimises for the remainder of parameters in the model.
-

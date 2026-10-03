@@ -9,7 +9,7 @@ toc:
   sidebar: left
 ---
 
-*This post is a record of my learning journey through Chapter 2 of the [Berkeley Deep Representation Learning book](https://ma-lab-berkeley.github.io/deep-representation-learning-book/Ch2.html). Rather than a polished summary, it captures the actual process — the questions, the derivations, the stuck points, and the moments of clarity. Everything under **Me:** I derived myself on paper. Everything under **Claude:** is guidance, hints, or consolidation.*
+_This post is a record of my learning journey through Chapter 2 of the [Berkeley Deep Representation Learning book](https://ma-lab-berkeley.github.io/deep-representation-learning-book/Ch2.html). Rather than a polished summary, it captures the actual process — the questions, the derivations, the stuck points, and the moments of clarity. Everything under **Me:** I derived myself on paper. Everything under **Claude:** is guidance, hints, or consolidation._
 
 ---
 
@@ -76,13 +76,13 @@ Differentiating with respect to $$\tilde{\mathbf{z}}_i$$ and setting to zero:
 
 $$\frac{\partial}{\partial \tilde{\mathbf{z}}_i}: \quad -2\mathbf{U}^\top\mathbf{x}_i + 2\tilde{\mathbf{z}}_i = 0 \implies \boxed{\mathbf{z}_i^\star = \mathbf{U}^\top\mathbf{x}_i}$$
 
-*(Note: I initially wrote $$\mathbf{z}_i = \mathbf{x}_i^\top\mathbf{U}$$ — a row vector — then caught the shape error and corrected to the column vector form.)*
+_(Note: I initially wrote $$\mathbf{z}_i = \mathbf{x}_i^\top\mathbf{U}$$ — a row vector — then caught the shape error and corrected to the column vector form.)_
 
 **Claude:** Exactly right. Note: the two cross terms collapse because both are scalars, so a scalar equals its own transpose — you'll use that trick constantly.
 
 Now push further: what is $$\mathbf{U}\mathbf{U}^\top\mathbf{x}_i$$ geometrically?
 
-**Me:** *(sketch)* Taking $$D=3$$, $$d=1$$, so $$\mathbf{U} = \mathbf{u}$$ is a single unit vector:
+**Me:** _(sketch)_ Taking $$D=3$$, $$d=1$$, so $$\mathbf{U} = \mathbf{u}$$ is a single unit vector:
 
 $$\mathbf{u}\mathbf{u}^\top\mathbf{x}_i = (\mathbf{u}^\top\mathbf{x}_i)\mathbf{u}$$
 
@@ -92,7 +92,7 @@ The scalar $$\mathbf{u}^\top\mathbf{x}_i$$ is the component of $$\mathbf{x}_i$$ 
 
 **Retention anchor:** Why is $$\mathbf{U}\mathbf{U}^\top\mathbf{x}_i$$ the denoised version of $$\mathbf{x}_i$$?
 
-*Answer chain:* $$\mathbf{x}_i = \mathbf{U}\mathbf{z}_i + \boldsymbol{\varepsilon}_i$$ → the true signal lives on the subspace → projection strips the noise component → $$\hat{\mathbf{x}}_i = \mathbf{U}\mathbf{U}^\top\mathbf{x}_i$$.
+_Answer chain:_ $$\mathbf{x}_i = \mathbf{U}\mathbf{z}_i + \boldsymbol{\varepsilon}_i$$ → the true signal lives on the subspace → projection strips the noise component → $$\hat{\mathbf{x}}_i = \mathbf{U}\mathbf{U}^\top\mathbf{x}_i$$.
 
 ---
 
@@ -204,11 +204,11 @@ Before moving to Section 2.2, we needed the spectral theorem, and then SVD. Rath
 
 **Me:** Let $$\mathbf{M}\mathbf{v} = \lambda\mathbf{v}$$ with $$\lambda \in \mathbb{C}$$, $$\mathbf{v} \in \mathbb{C}^n$$. Compute $$\bar{\mathbf{v}}^\top\mathbf{M}\mathbf{v}$$ two ways.
 
-*Way 1:* Using the eigenvalue equation directly:
+_Way 1:_ Using the eigenvalue equation directly:
 
 $$\bar{\mathbf{v}}^\top\mathbf{M}\mathbf{v} = \bar{\mathbf{v}}^\top(\lambda\mathbf{v}) = \lambda\sum_i |v_i|^2$$
 
-*Way 2:* Take the complex conjugate of the whole expression. Since $$\mathbf{M}$$ is real and symmetric ($$\mathbf{M}^* = \mathbf{M}$$, $$\mathbf{M}^\top = \mathbf{M}$$):
+_Way 2:_ Take the complex conjugate of the whole expression. Since $$\mathbf{M}$$ is real and symmetric ($$\mathbf{M}^* = \mathbf{M}$$, $$\mathbf{M}^\top = \mathbf{M}$$):
 
 $$\overline{(\bar{\mathbf{v}}^\top\mathbf{M}\mathbf{v})} = \mathbf{v}^\top\mathbf{M}^\top\bar{\mathbf{v}} = \mathbf{v}^\top\mathbf{M}\bar{\mathbf{v}}$$
 
@@ -224,11 +224,11 @@ $$\lambda\sum_i|v_i|^2 = \bar{\lambda}\sum_i|v_i|^2 \implies \lambda = \bar{\lam
 
 **Me:** Take two eigenpairs $$(\lambda_1, \mathbf{v}_1)$$ and $$(\lambda_2, \mathbf{v}_2)$$ with $$\lambda_1 \neq \lambda_2$$. Compute $$\mathbf{v}_1^\top\mathbf{M}\mathbf{v}_2$$ two ways.
 
-*Way 1:* Use $$\mathbf{v}_2$$ is an eigenvector:
+_Way 1:_ Use $$\mathbf{v}_2$$ is an eigenvector:
 
 $$\mathbf{v}_1^\top\mathbf{M}\mathbf{v}_2 = \lambda_2\mathbf{v}_1^\top\mathbf{v}_2$$
 
-*Way 2:* Use symmetry of $$\mathbf{M}$$ — transpose the expression (it's a scalar so equals its transpose):
+_Way 2:_ Use symmetry of $$\mathbf{M}$$ — transpose the expression (it's a scalar so equals its transpose):
 
 $$\mathbf{v}_1^\top\mathbf{M}\mathbf{v}_2 = (\mathbf{v}_1^\top\mathbf{M}\mathbf{v}_2)^\top = \mathbf{v}_2^\top\mathbf{M}^\top\mathbf{v}_1 = \mathbf{v}_2^\top\mathbf{M}\mathbf{v}_1 = \lambda_1\mathbf{v}_2^\top\mathbf{v}_1 = \lambda_1\mathbf{v}_1^\top\mathbf{v}_2$$
 
@@ -248,19 +248,19 @@ Since $$\lambda_1 \neq \lambda_2$$: $$\mathbf{v}_1^\top\mathbf{v}_2 = 0 \quad \b
 
 **Me:**
 
-*Symmetry:*
+_Symmetry:_
 
 $$(\mathbf{A}^\top\mathbf{A})^\top = \mathbf{A}^\top(\mathbf{A}^\top)^\top = \mathbf{A}^\top\mathbf{A} \checkmark$$
 
 $$(\mathbf{A}\mathbf{A}^\top)^\top = (\mathbf{A}^\top)^\top\mathbf{A}^\top = \mathbf{A}\mathbf{A}^\top \checkmark$$
 
-*Non-negative eigenvalues:* If $$\mathbf{A}^\top\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$$, left-multiply by $$\mathbf{v}^\top$$:
+_Non-negative eigenvalues:_ If $$\mathbf{A}^\top\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$$, left-multiply by $$\mathbf{v}^\top$$:
 
 $$\mathbf{v}^\top\mathbf{A}^\top\mathbf{A}\mathbf{v} = \lambda\|\mathbf{v}\|^2 \implies \|\mathbf{A}\mathbf{v}\|^2 = \lambda\|\mathbf{v}\|^2$$
 
 Since $$\|\mathbf{A}\mathbf{v}\|^2 \geq 0$$ and $$\|\mathbf{v}\|^2 > 0$$, we get $$\lambda \geq 0$$.
 
-*Shared nonzero eigenvalues:* If $$\mathbf{A}^\top\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$$ with $$\lambda \neq 0$$, left-multiply by $$\mathbf{A}$$:
+_Shared nonzero eigenvalues:_ If $$\mathbf{A}^\top\mathbf{A}\mathbf{v} = \lambda\mathbf{v}$$ with $$\lambda \neq 0$$, left-multiply by $$\mathbf{A}$$:
 
 $$\mathbf{A}\mathbf{A}^\top(\mathbf{A}\mathbf{v}) = \lambda(\mathbf{A}\mathbf{v})$$
 
@@ -286,11 +286,11 @@ $$\boxed{\mathbf{A} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top}$$
 
 ### The New Setting
 
-Instead of data living on **one** subspace, it lives on a **union** of subspaces — each $$\mathbf{x}_i$$ comes from *one of* $$K$$ subspaces. The model:
+Instead of data living on **one** subspace, it lives on a **union** of subspaces — each $$\mathbf{x}_i$$ comes from _one of_ $$K$$ subspaces. The model:
 
 $$\mathbf{x} = \mathbf{U}\mathbf{z} + \boldsymbol{\varepsilon}, \qquad \|\mathbf{z}\|_0 \ll D$$
 
-where $$\mathbf{U} \in O(D)$$ is a **square orthogonal** dictionary and $$\mathbf{z}$$ is **sparse**. The word *complete* means the dictionary has exactly $$D$$ columns — a full basis for $$\mathbb{R}^D$$.
+where $$\mathbf{U} \in O(D)$$ is a **square orthogonal** dictionary and $$\mathbf{z}$$ is **sparse**. The word _complete_ means the dictionary has exactly $$D$$ columns — a full basis for $$\mathbb{R}^D$$.
 
 ### Why PCA Fails
 
@@ -416,15 +416,15 @@ Both are fixed-point iterations. MSP is the $$\ell^4$$ analogue of power iterati
 ### Section 2.2 Retention Anchors
 
 **Anchor 4:** Why does PCA fail to recover a sparse dictionary?
-*(The objective is rotation invariant — replacing $$\mathbf{U}$$ by $$\mathbf{U}\mathbf{Q}$$ leaves the objective unchanged but destroys sparsity of the codes.)*
+_(The objective is rotation invariant — replacing $$\mathbf{U}$$ by $$\mathbf{U}\mathbf{Q}$$ leaves the objective unchanged but destroys sparsity of the codes.)_
 
 **Anchor 5:** Why does $$\ell^4$$ maximisation promote sparsity geometrically?
-*(The $$\ell^4$$ ball has corners pointing at coordinate axes. Maximising $$\ell^4$$ norm on the $$\ell^2$$ sphere finds directions that stick into those corners — the sparse directions.)*
+_(The $$\ell^4$$ ball has corners pointing at coordinate axes. Maximising $$\ell^4$$ norm on the $$\ell^2$$ sphere finds directions that stick into those corners — the sparse directions.)_
 
 **Anchor 6:** What is the MSP iteration and where does each piece come from?
-*(Gradient of $$\ell^4$$ objective gives $$(\tilde{\mathbf{A}}\mathbf{X})^{\odot 3}\mathbf{X}^\top$$; projection onto $$O(D)$$ via SVD gives $$\mathbf{U}\mathbf{V}^\top$$.)*
+_(Gradient of $$\ell^4$$ objective gives $$(\tilde{\mathbf{A}}\mathbf{X})^{\odot 3}\mathbf{X}^\top$$; projection onto $$O(D)$$ via SVD gives $$\mathbf{U}\mathbf{V}^\top$$.)_
 
 **Anchor 7:** Why is $$\mathbf{U}\mathbf{V}^\top$$ the closest orthogonal matrix to $$\mathbf{M} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$$?
-*(Frobenius minimisation → cyclic trace → reduce to $$\max\mathrm{tr}(\mathbf{\Sigma}\tilde{\mathbf{Q}})$$ → entries bounded by 1 → $$\tilde{\mathbf{Q}} = \mathbf{I}$$ optimal → $$\mathbf{Q}^\star = \mathbf{U}\mathbf{V}^\top$$.)*
+_(Frobenius minimisation → cyclic trace → reduce to $$\max\mathrm{tr}(\mathbf{\Sigma}\tilde{\mathbf{Q}})$$ → entries bounded by 1 → $$\tilde{\mathbf{Q}} = \mathbf{I}$$ optimal → $$\mathbf{Q}^\star = \mathbf{U}\mathbf{V}^\top$$.)_
 
 ---

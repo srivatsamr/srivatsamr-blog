@@ -86,18 +86,7 @@
   ],
   "skills": [
     {
-      "keywords": [
-        "C++",
-        "Python",
-        "MPI",
-        "OpenMP",
-        "CUDA",
-        "Dask",
-        "Slurm",
-        "Pytorch",
-        "TensorFlow",
-        "Linux"
-      ]
+      "keywords": ["C++", "Python", "MPI", "OpenMP", "CUDA", "Dask", "Slurm", "Pytorch", "TensorFlow", "Linux"]
     }
   ],
   "languages": [

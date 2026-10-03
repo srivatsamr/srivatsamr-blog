@@ -12,7 +12,7 @@ One of the many things I like about being a computational scientist is that I ge
 
 # The basic problem in geostatistics
 
-Usually in statistics, we have the opportunity to repeat an experiment to derive statistics about the quantity we are trying to observe. In geostatistics this is not possible. Once you take a sample from earth, that's all you have. You can't sample it again. The way geostatisticians overcome this is by assuming that the statistics of the random variable at a given location can be derived by sampling nearby locations (important to note that the observations at any location is in itself a random variable). The assumption here is that the spatial statistics within some neighbourhood is a reasonable proxy to the statistics at a given location. This is called the *Stationarity Assumption*. Mathematically:
+Usually in statistics, we have the opportunity to repeat an experiment to derive statistics about the quantity we are trying to observe. In geostatistics this is not possible. Once you take a sample from earth, that's all you have. You can't sample it again. The way geostatisticians overcome this is by assuming that the statistics of the random variable at a given location can be derived by sampling nearby locations (important to note that the observations at any location is in itself a random variable). The assumption here is that the spatial statistics within some neighbourhood is a reasonable proxy to the statistics at a given location. This is called the _Stationarity Assumption_. Mathematically:
 
 $$
 \begin{aligned}
@@ -30,7 +30,7 @@ Note: Sometimes, we can extend the stationarity assumption to a larger area if w
 
 # Semivariogram
 
-To quantify the spatial relationships, they use something called a *Semivariogram* which is defined as half of the expected squared diifference between values separated by a specified *lag vector*. 
+To quantify the spatial relationships, they use something called a _Semivariogram_ which is defined as half of the expected squared diifference between values separated by a specified _lag vector_.
 
 $$
 \begin{aligned}
@@ -39,7 +39,7 @@ $$
 \end{aligned}
 $$
 
-This is related to *covariance*. For the sake of brevity, I'll just use subscript $\alpha$ for quantities at $\vec{u}_\alpha$ and ${\alpha + h}$ for those at $\vec{u}+\vec{h}$
+This is related to _covariance_. For the sake of brevity, I'll just use subscript $\alpha$ for quantities at $\vec{u}_\alpha$ and ${\alpha + h}$ for those at $\vec{u}+\vec{h}$
 
 $$
 \begin{aligned}
@@ -74,20 +74,19 @@ $$\gamma(\vec{h}) = \sigma^2 - Cov(\vec{h})$$
 
 ## Some notes about variograms
 
-- $\sigma^2$ is called the *Sill*.
-- The lag magnitude where $Cov(\vec{h}) = 0$, is called the *Range*.
+- $\sigma^2$ is called the _Sill_.
+- The lag magnitude where $Cov(\vec{h}) = 0$, is called the _Range_.
 - Intuitively, when the lag is small, variogram value is small as we are able to get quite a lot of information from the neighbours. As we go further, the information we get is less and the variogram value increases.
 - Beyond the range, we can't tell much about the random variable using the information about the values elsewhere.
 - When computing experimental variograms, we might see that the values might go beyond the sill, meaning that we are going well beyond the stationarity scale as we are hitting a trend that causes large difference in values. Or this could also happen if we don'thave enough samples for calculating experimental variogram at those lags (unstable computation of expectation).
 - We might also see oscillatory variogram. If oscillation is near the sill, it means we have alternating features - still stationarity but alternative across scale.
-- Since lag is a vector, we can compute variograms in different directions. In 2D we can have a variogram at different azimuths. If we find different characteristics in different directions, we have an *Anisotropic* behavior.
+- Since lag is a vector, we can compute variograms in different directions. In 2D we can have a variogram at different azimuths. If we find different characteristics in different directions, we have an _Anisotropic_ behavior.
 
 # Best estimate for minimizing Mean Squared Error (MSE)
 
-
 Let's consider the problem of estimating the value of the random variable $z$ at a location $\vec{u}$ given the values of random variables $z_i$ at $\vec{u_i}$ where i = 1, 2, 3 ... N.
 
-We want the estimate to be such that the MSE is minimal. It is important to clarify what that means. Since $z$ is a random variable, it can take different values. We want to estimate *one* value $z^*$ such that the MSE for the different values $z$ can take is minimized. At first glance it seems confusing - how do we work with MSE when we don't know the values $z$ can take? But the math simplifies things!
+We want the estimate to be such that the MSE is minimal. It is important to clarify what that means. Since $z$ is a random variable, it can take different values. We want to estimate _one_ value $z^*$ such that the MSE for the different values $z$ can take is minimized. At first glance it seems confusing - how do we work with MSE when we don't know the values $z$ can take? But the math simplifies things!
 
 The only information we have in hand that we can use to arrive at the estimate are the values of $z_i$. So let:
 $$z^* = g(z_1, z_2 ... z_N) = g(\mathbf{z})$$
@@ -138,7 +137,7 @@ $$
 \end{aligned}
 $$
 
-So the estimate that minimizes the MSE error is the *Conditional Expectation*
+So the estimate that minimizes the MSE error is the _Conditional Expectation_
 
 $$z^* = \mathbb{E}_{z|\mathbf{z}}[z]$$
 
@@ -146,18 +145,18 @@ $$z^* = \mathbb{E}_{z|\mathbf{z}}[z]$$
 
 ## Ordinary Kriging
 
-If we assume that there is a conditional expectation that is linear in $Y$, what should it be like? 
+If we assume that there is a conditional expectation that is linear in $Y$, what should it be like?
 
 $$z^* = g(\mathbf{z}) = \sum_{i=1}^N w_i z_i$$
 
-The error in our estimate is 
+The error in our estimate is
 
 $$Error = z - z^*$$
 
 Our goal is to find $w_i$ such that:
 
 1. The error is unbiased:
-$$\mathbb{E}[Error] = 0$$
+   $$\mathbb{E}[Error] = 0$$
 
 2. And we minimize the variance of the error.
 
@@ -169,7 +168,8 @@ $$
 \end{aligned}
 $$
 
-For unbiasedness, 
+For unbiasedness,
+
 $$
 \begin{aligned}
 \mathbb{E}[Error] &= \mathbb{E}[z - \sum_{i=1}^Nw_iz_i]\\
@@ -179,7 +179,7 @@ $$
 
 Under stationarity assumption, $\mathbb{E}[z] = \mathbb{E}[z_i] = \mu$
 
-So the constraint becomes 
+So the constraint becomes
 
 $$\mu(1 - \sum_{i = 1}^Nw_i) = 0 \implies \sum_{i=1}^Nw_i = 1$$
 
@@ -190,11 +190,11 @@ $$
 \text{minimize w.r.t $w_i$} \quad &\mathbb{E}[(z - \sum_{i=1}^N w_i z_i)^2] + 2\lambda(1 - \sum_{i=1}^Nw_i)\\
 =&\mathbb{E}[z^2 + (\sum_{i=1}^Nw_iz_i)^2 - 2z\sum_{i=1}^Nw_iz_i] + 2\lambda(1 - \sum_{i=1}^Nw_i) \\
 =&\mathbb{E}[z^2] + \mathbb{E}[\sum_{i=1}^N\sum_{j=1}^Nw_iw_jz_iz_j] - 2\mathbb{E}[z\sum_{i=1}^Nw_iz_i] +2\lambda(1 - \sum_{i=1}^Nw_i) \\
-= & \mathbb{E}[z^2] + \sum_{i=1}^N\sum_{j=1}^Nw_iw_j\mathbb{E}[z_iz_j] - 2\sum_{i=1}^Nw_i\mathbb{E}[zz_i] + 2\lambda(1 - \sum_{i=1}^Nw_i) 
+= & \mathbb{E}[z^2] + \sum_{i=1}^N\sum_{j=1}^Nw_iw_j\mathbb{E}[z_iz_j] - 2\sum_{i=1}^Nw_i\mathbb{E}[zz_i] + 2\lambda(1 - \sum_{i=1}^Nw_i)
 \end{aligned}
 $$
 
-To minimize this w.r.t $w_i$, we need to take the partial derivative of this with each of the $w_i$ and $\lambda$, and set it to $0$. 
+To minimize this w.r.t $w_i$, we need to take the partial derivative of this with each of the $w_i$ and $\lambda$, and set it to $0$.
 
 $$
 \begin{aligned}
@@ -203,9 +203,7 @@ $$
 \end{aligned}
 $$
 
-
 And
-
 
 $$
 \begin{aligned}
@@ -213,7 +211,6 @@ $$
 &\implies \sum_{i=1}^Nw_i = 1
 \end{aligned}
 $$
-
 
 In matrix notation:
 
@@ -284,13 +281,13 @@ Solving this system gives us the weights such that
 
 $$\mathbf{C}\mathbf{w} = \mathbf{c}$$
 
-and 
+and
 
 $$\sum_{i=1}^Nw_i = 1$$
 
 where:
 
-$$\mathbf{C} = \underbrace{\begin{bmatrix}
+$$ \mathbf{C} = \underbrace{\begin{bmatrix}
 \text{Cov}(z_1, z_1)& \text{Cov}(z_1, z_2) & \cdots & \text{Cov}(z_1, z_N)\\
 \text{Cov}(z_2, z_1) & \text{Cov}(z_2, z_2) & \cdots & \text{Cov}(z_2, z_N)\\
 \vdots & \vdots & \ddots & \vdots\\
@@ -299,15 +296,17 @@ $$\mathbf{C} = \underbrace{\begin{bmatrix}
 \end{bmatrix}}_{N \times N}$$
 
 $$
+
 \mathbf{w} =
 \begin{bmatrix}
 w_1 \\
 \vdots \\
 w_N
 \end{bmatrix}_{N \times 1}
-$$
 
 $$
+$$
+
 \mathbf{c} =
 \begin{bmatrix}
 \text{Cov}(z, z_1)\\
@@ -315,6 +314,7 @@ $$
 \vdots \\
 \text{Cov}(z, z_N)
 \end{bmatrix}_{N \times 1}
+
 $$
 
 Then the estimate is:
@@ -324,6 +324,7 @@ $$z^* = \mathbf{c}^T(\mathbf{C}^{-1})^T\mathbf{z}$$
 Moreover, substituting $\mathbf{w}$ in the error variance computation:
 
 $$
+
 \begin{aligned}
 \sigma_E^2 &= \mathbb{E}[(z - \mathbf{w}^T\mathbf{z})^2] \\
 &= \mathbb{E}[((z - \mathbf{w}^T\mathbf{z})(z - \mathbf{w}^T\mathbf{z})^T] \\
@@ -332,21 +333,26 @@ $$
 &= \sigma^2 + \mu^2 + \mathbf{w}^T(\mathbf{C} + \mu^2\mathbf{1}_{N\times N})\mathbf{w} - 2\mathbf{w}^T(\mathbf{c} + \mu^2\mathbf{1}_{N \times 1}) \\
 &= \sigma^2 + \mu^2 + \mathbf{w}^T(\mu\mathbf{1}_{N\times N})\mathbf{w} + \mathbf{w}^T\mathbf{C}\mathbf{w} - 2\mathbf{w}^T\mathbf{c} - 2\mathbf{w}^T \mu^2\mathbf{1}_{N \times 1}
 \end{aligned}
+
 $$
 
 With the unbiasedness constraint, this simplifies to
 
 $$
+
 \sigma_E^2 = \sigma^2 + \cancel{\mu^2} + \cancel{\mu^2} + \mathbf{w}^T\mathbf{C}\mathbf{w} - 2\mathbf{w}^T\mathbf{c} - \cancel{2\mu^2}
+
 $$
 
 Substituting $\mathbf{w} = \mathbf{C}^{-1}\mathbf{c}$
 
 $$
+
 \begin{aligned}
 \sigma_E^2 &= \sigma^2 + \mathbf{c}^T(\mathbf{C}^{-1})^T\cancel{\mathbf{C}\mathbf{C}^{-1}}\mathbf{c} - 2\mathbf{c}^T\mathbf{C}^{-1}\mathbf{c} \\
 &=\sigma^2 - \mathbf{c}^T\mathbf{C}^{-1}\mathbf{c}
 \end{aligned}
+
 $$
 
 ### Positive definitveness of Covariance matrix
@@ -354,20 +360,23 @@ $$
 If we consider the random variable $z^* = g(\mathbf{z}) = \mathbf{w}^T\mathbf{z}$ for a fixed weight vector,
 
 $$
+
 \begin{aligned}
 \mathbb{E}[g(\mathbf{z})] &= \mathbb{E}[\mathbf{w}^T\mathbf{z}] \\
 &= \mathbf{w}^T\mathbb{E}[\mathbf{z}] \\
 &= \mathbf{w}^T\vec{\mu}
 \end{aligned}
-$$
 
 $$
+$$
+
 \begin{aligned}
 Var(g(\mathbf{z})) &= \mathbb{E}[(\mathbf{w}^T\mathbf{z} - \mathbf{w}^T\vec{\mu})^2] \\
 &= \mathbb{E}[(\mathbf{w}^T(\mathbf{z}-\vec{\mu})(\mathbf{z}-\vec{\mu})^T\mathbf{w})] \\
 &= \mathbf{w}^T\mathbb{E}[\mathbf{z}-\vec{\mu})(\mathbf{z}-\vec{\mu})^T]\mathbf{w} \\
 &= \mathbf{w}^T\mathbf{C}\mathbf{w}
 \end{aligned}
+
 $$
 
 Since $Var \geq 0$, $\mathbf{C}$ is Positive Semidefinite. But $\mathbf{C}$ also must be invertible for Kriging systems. So $\mathbf{C}$ has to be **Positive Definite**. This is the reason why the theoretical variogram models we use in geostatistics are chosen carefully.
@@ -387,11 +396,13 @@ $$z^* = \mu + \mathbf{w}^T(\mathbf{z}-\vec{\mu})$$
 If we check the expectation of the error:
 
 $$
+
 \begin{aligned}
 \mathbb{E}[z - (\mu + \mathbf{w}^T(\mathbf{z}-\vec{\mu}))] &= \mathbb{E}[z] - \mathbb{E}[\mu] - \mathbf{w}^T(\mathbb{E}[\mathbf{z}] - \mathbb{E}[\vec{\mu}])\\
 &= \mu - \mu - \mathbf{w}^T(\vec{\mu} - \vec{\mu}) \\
 &= 0
 \end{aligned}
+
 $$
 
 When we know the mean and model the estimate as above, the estimate is inherently unbiased. So there is non constraint on the weights as in ordinary kriging.
@@ -399,12 +410,14 @@ When we know the mean and model the estimate as above, the estimate is inherentl
 Similar to our earlier procedure, lets minimize the variance of the error which in case of unbiased estimate is the MSE.
 
 $$
+
 \begin{aligned}
 \sigma^2_E &= \mathbb{E}[(z - \mu - \mathbf{w}^T(\mathbf{z} - \vec{\mu}))^2] \\
 &= \mathbb{E}[(z-\mu)^2 + \mathbf{w}^T(\mathbf{z} - \vec{\mu})(\mathbf{z} - \vec{\mu})^T\mathbf{w} - 2\mathbf{w}^T(z-\mu)(\mathbf{z}- \vec{\mu})] \\
 &= \mathbb{E}[(z-\mu)^2] + \mathbf{w}^T\mathbb{E}[(\mathbf{z} - \vec{\mu})(\mathbf{z} - \vec{\mu})^T] - 2\mathbf{w}^T\mathbb{E}[(z-\mu)(\mathbf{z}- \vec{\mu})] \\
 &= \sigma^2 + \mathbf{w}^T\mathbf{C}\mathbf{w} - 2\mathbf{w}^T\mathbf{c}
 \end{aligned}
+
 $$
 
 Taking partial derivatives with $w_i$ and setting to 0, we get
@@ -416,10 +429,12 @@ Which is similar to the case in ordinary kriging, but *without* the constraint t
 The kriging estimate and variance have same formulation for the solved weights.
 
 $$
+
 \begin{aligned}
 z^* &= \mu + \mathbf{c}^T(\mathbf{C}^{-1})^T(\mathbf{z} - \vec{\mu}) \\
-\sigma_E^2 &= \sigma^2 -  \mathbf{c}^T\mathbf{C}^{-1}\mathbf{c}
+\sigma_E^2 &= \sigma^2 - \mathbf{c}^T\mathbf{C}^{-1}\mathbf{c}
 \end{aligned}
+
 $$
 
 
@@ -433,9 +448,9 @@ where:
 
 $$Z = \begin{bmatrix}z_0 \\ z_1 \\ \vdots \\z_N\end{bmatrix}_{(N+1) \times 1} \quad \vec{\mu} = \begin{bmatrix}\mu \\\mu \\ \vdots \\ \mu \end{bmatrix}_{(N+1) \times 1}$$
 
-And 
+And
 
-$$\Sigma = \begin{bmatrix} 
+$$\Sigma = \begin{bmatrix}
 C_{00} & C_{01} & \cdots & C_{0N} \\
 C_{10} & C_{11} & \cdots & C_{1N} \\
 \vdots & \vdots & \ddots & \vdots \\
@@ -445,10 +460,12 @@ C_{N0} & C_{N1} & \cdots & C_{NN} \\
 Given the joint distribution, the conditional distribution of $z$ given $z_i$ can be derived as follows:
 
 $$
+
 \begin{aligned}
 f(z_0 | z_1, z_2, .. z_N) &= \frac{f(z_0, z_1, z_2, .... z_N)}{f(z_1, z_2, ... z_N)} \\
- &= \frac{\frac{1}{\sqrt{2\pi|\Sigma|}} exp(-\frac{1}{2})(Z-\vec{\mu})^T\Sigma^{-1}(Z - \vec{\mu})}{\frac{1}{\sqrt{2\pi|\mathbf{C}|}} exp(-\frac{1}{2})(Z_1-\vec{\mu_1})^T\mathbf{C}^{-1}(Z_1 - \vec{\mu_1})}
+&= \frac{\frac{1}{\sqrt{2\pi|\Sigma|}} exp(-\frac{1}{2})(Z-\vec{\mu})^T\Sigma^{-1}(Z - \vec{\mu})}{\frac{1}{\sqrt{2\pi|\mathbf{C}|}} exp(-\frac{1}{2})(Z_1-\vec{\mu_1})^T\mathbf{C}^{-1}(Z_1 - \vec{\mu_1})}
 \end{aligned}
+
 $$
 
 where:
@@ -457,7 +474,7 @@ $$Z_1 = \begin{bmatrix}z_1 \\ \vdots \\z_N\end{bmatrix}_{N \times 1} \quad \vec{
 
 and
 
-$$\mathbf{C} = \begin{bmatrix} 
+$$\mathbf{C} = \begin{bmatrix}
 C_{11} & C_{12} & \cdots & C_{1N} \\
 C_{21} & C_{22} & \cdots & C_{2N} \\
 \vdots & \vdots & \ddots & \vdots \\
@@ -470,7 +487,7 @@ $$Z = \begin{bmatrix}z_0 \\ Z_1\end{bmatrix} \quad \vec{\mu} = \begin{bmatrix} \
 
 and
 
-$$\Sigma = \begin{bmatrix} 
+$$\Sigma = \begin{bmatrix}
 C_{00} & \mathbf{c} \\
 \mathbf{c}^T & \mathbf{C} \\
 \end{bmatrix}$$
@@ -481,7 +498,7 @@ And some "Trust me bro" advanced linear algebra ([Schur Complement](https://www.
 
 $$\mu_{cond} = \mu + \mathbf{c}^T (\mathbf{C}^{-1})^T(Z_1 - \vec{\mu_1})$$
 
-and 
+and
 
 $$\sigma_{cond}^2 = C_{00} - \mathbf{c}^T\mathbf{C}^{-1}\mathbf{c}$$
 
@@ -503,3 +520,4 @@ There are other extensions, like [indicator kriging](https://geostatsguy.github.
 # Conclusion
 
 Uff, that was quite a journey but I feel satisfied. If you find some logical mistakes, typos or bugs, please reach out to me :) Ciao!
+$$

@@ -218,7 +218,7 @@ exclude:
   - _books/
   - _layouts/book-review.liquid
   - _layouts/book-shelf.liquid
-  - # Exclude jupyter notebook
+  -  # Exclude jupyter notebook
   - assets/jupyter/blog.ipynb
 
 keep_files:

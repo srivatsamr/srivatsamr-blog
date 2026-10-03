@@ -2,7 +2,7 @@
 layout: post
 title: Building a Transformer
 date: 2026-04-04
-description: A visual summary and important notes 
+description: A visual summary and important notes
 categories: machine-learning
 tags: [interpretability, transformers, deep-learning]
 bibliography: papers.bib
@@ -41,8 +41,8 @@ fetch("{{ 'assets/img/post/2026-04-04_1.svg' | relative_url }}")
 
 The first thing to do for processing strings with our model is to convert the string to a sequence of numbers. A widely used algorithm to do this is the [Byte Pair Encoding](https://huggingface.co/learn/llm-course/chapter6/5) algorithm. The core idea here is:
 
-* If we only use single characters as our vocabulary, the sequences we work with will become quite large and learning the context becomes very difficult.
-* If we only use the words in traditional dictionary, we will be restricted to words and miss out representing things like punctuations and emojis. Moreover, it won't be robust to spelling mistakes.
+- If we only use single characters as our vocabulary, the sequences we work with will become quite large and learning the context becomes very difficult.
+- If we only use the words in traditional dictionary, we will be restricted to words and miss out representing things like punctuations and emojis. Moreover, it won't be robust to spelling mistakes.
 
 So we use sub-word tokenization. To keep it robust, BPE works directly on the byte representation of strings so that any arbitrary character is represented. The algorithm is quite straight forward. We start with individual characters in the vocabulary and iteratively find the most frequent consecutive pair and add it to the vocabulary. Repeat this until the target vocabulary size is reached. So the encoding is actually dependent on the training data we use.
 
@@ -64,9 +64,9 @@ The learnable positional embedding has a few drawbacks:
 
 The formulation of a good positional enmbedding is driven by the requirements:
 
-* The positional embedding must be unique for a given position in the sequence - adjacent positions must differ significantly enough for the model to distinguish between them nicely.
-* The embedding must be bounded. Large context should not push the embedding components to very large values.
-* The difference between embeddings of tokens in two different positions must be a function of their relative distance and not the absolute location.
+- The positional embedding must be unique for a given position in the sequence - adjacent positions must differ significantly enough for the model to distinguish between them nicely.
+- The embedding must be bounded. Large context should not push the embedding components to very large values.
+- The difference between embeddings of tokens in two different positions must be a function of their relative distance and not the absolute location.
 
 To this end, [sinusoidal embedding](https://www.ibm.com/think/topics/positional-encoding) uses sines and cosines to embed the position.
 
@@ -88,7 +88,7 @@ $$\omega_k = \frac{1}{10000^{2k/d}} \quad k=0, 1, 2 ... d/2$$
 
 ### Residual Stream
 
-A common theme in transformer architecture is that every new bit of information is added to the original input, i.e. each layer computes *Residuals*, and modifies the input incrementally. So once we have the positional embeddings, they are added to the embedding vectors and the result is then passed to the Transformer Model.
+A common theme in transformer architecture is that every new bit of information is added to the original input, i.e. each layer computes _Residuals_, and modifies the input incrementally. So once we have the positional embeddings, they are added to the embedding vectors and the result is then passed to the Transformer Model.
 
 Each layer in the transformer modifies the input. The layers only need to learn the modifications. Without residual architecture, each layer has to first learn the Identity function to figure out how to represent the input and then work on adding some information to it
 
@@ -109,7 +109,7 @@ $$\frac{\partial \mathbf{y}_i}{\partial \mathbf{y}_{i-1}}$$
 is the Jacobian matrix. Often, the singular values of this Jacobian matrix have values $<$ 1, and multiplying several such matrices shrinks the magnitude of the gradient for deep architectures. So the training becomes ineffective - small gradients, no significant updates. To deal with this, we use residual terms:
 
 $$\mathbf{y}_i = \mathbf{y}_{i-1} + F_i(\mathbf{y}_{i-1})$$
-  
+
 $$\frac{\partial \mathbf{y}_i}{\partial \mathbf{y}_{i-1}} = \mathbf{I} + \frac{\partial F_i(\mathbf{y}_{i-1})}{\partial \mathbf{y}_{i-1}}$$
 
 $$\frac{\partial \mathbf{y}_N}{\partial \mathbf{W}_k} = \left(\prod_{i=k+1}^{N} \left(\mathbf{I} + \frac{\partial F_i(\mathbf{y}_{i-1})}{\partial \mathbf{y}_{i-1}}\right)\right) \frac{\partial \mathbf{y}_k}{\partial \mathbf{W}_k}$$
@@ -120,8 +120,8 @@ This is typically done by normalizing the inputs. You take the feature vector, n
 
 ### Layer Norm
 
-* Take each feature vector and normalize its components using mean and variance within the feature vector
-* Learn a scale and bias term (common)
+- Take each feature vector and normalize its components using mean and variance within the feature vector
+- Learn a scale and bias term (common)
 
 ## Core Architecture
 
@@ -141,7 +141,7 @@ Given the token embeddings modified by adding the positional embeddings (note th
 3. So we take the input embeddings and multiply with the Query Matrix to get Query Vectors. We multiply the inputs with Key Matrix to get the Key Vectors. Attention scores are nothing but the dot product of each Query with each Key, scaled and softmaxed to give weights that add up to 1.
 
 $$\text{Attention Scores} = softmax(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}})$$
-*Why are we scaling with the dimension of query/key space?*
+_Why are we scaling with the dimension of query/key space?_
 
 Assume that the components of the query and key vectors, $q_i$ and $k_i$ are i.i.d. With $\mathbb{E}[q_i] = \mathbb{E}[k_i] = 0$ and $\text{Var}[q_i] = \text{Var}[k_i] = 1$.
 
@@ -171,8 +171,8 @@ At the end of all the blocks, we need to take the outputs and compute the logits
 
 Now, instead of learning a new parameter matrix, we could have taken the transpose of the embedding matrix. It might seem reasonable at first.
 
-* The outputs are vectors in the embedding model dimension per input token. If we take the dot product of each output vector with all the embedding vectors for the tokens in our vocabulary, we can expect that the one most aligned will have have the higher probability for the next token.
-* We have less parameters to train, so more efficient training
+- The outputs are vectors in the embedding model dimension per input token. If we take the dot product of each output vector with all the embedding vectors for the tokens in our vocabulary, we can expect that the one most aligned will have have the higher probability for the next token.
+- We have less parameters to train, so more efficient training
 
 But here is the issue. Consider a transformer with no attention layers.
 
@@ -184,7 +184,7 @@ where each logit $j$ is just a dot product $\vec{v}_i \cdot \vec{v}_j$ between t
 
 But dot products are symmetric, so tied weights force:
 $$\vec{v}_{\text{Barack}} \cdot \vec{v}_{\text{Obama}} = \vec{v}_{\text{Obama}} \cdot \vec{v}_{\text{Barack}}$$
-This means the model would predict "Obama" to follow "Barrack" with the same confidence as "Barrack" to follow "Obama" which is not the case in real life - *Bigram statistics*
+This means the model would predict "Obama" to follow "Barrack" with the same confidence as "Barrack" to follow "Obama" which is not the case in real life - _Bigram statistics_
 
 Also, the diagonal of $W_E W_E^T$ contains $\|\vec{v}_i\|^2$, which is always the largest dot product by Cauchy-Schwarz. So the direct path is structurally biased toward predicting the current token as the next token.
 
@@ -200,15 +200,15 @@ The expected output is the true categorical distribution for the next token whic
 
 The predicted output is the softmax output of the model logits.
 
-The loss function therefore is a measure of how different the predicted probability distribution is compared to the actual one. This is measured using *KL Divergence* and *Cross Entropy*. [Here](https://www.youtube.com/watch?v=KHVR587oW8I) is a cool youtube video explaining these concepts. I've summarized it along with some derivations missing from the video below.
+The loss function therefore is a measure of how different the predicted probability distribution is compared to the actual one. This is measured using _KL Divergence_ and _Cross Entropy_. [Here](https://www.youtube.com/watch?v=KHVR587oW8I) is a cool youtube video explaining these concepts. I've summarized it along with some derivations missing from the video below.
 
 ### Surprise
 
 Measure of how unlikely an event is. For an event with probability 1, surprise is 0
-For event with probability less than 1, surprise is a positive quantity. *Inverse relation*
+For event with probability less than 1, surprise is a positive quantity. _Inverse relation_
 
 We also want surprise to be additive. Say someone predicts the event correctly 3 times. The surprise should be thrice (3x). The probability of this happening is $p^3$.
-The function that encapsulates this idea is the logarithmic function. *Logarithmic relation*
+The function that encapsulates this idea is the logarithmic function. _Logarithmic relation_
 
 $$\text{surprise} \quad h(s) = log(\frac{1}{p_s})$$
 
@@ -218,15 +218,15 @@ The average surprise in the distribution
 
 $$H = \sum_s p_s log(\frac{1}{p_s})$$
 
-The more the entropy, the more *Uncertainty* packed in the distribution.
+The more the entropy, the more _Uncertainty_ packed in the distribution.
 
 The true probabilities are needed to compute entropy which is usually not available. We approximate them with model probability $q$.
 
-If the model deviates from the real probability significantly, your surprise when you observe the data will be high. If the model and real are close, you expect the surprise to be low. We quantify this using *Cross Entropy*
+If the model deviates from the real probability significantly, your surprise when you observe the data will be high. If the model and real are close, you expect the surprise to be low. We quantify this using _Cross Entropy_
 
 ### Cross Entropy
 
-Average surprise by observing random variable with real distribution $P$ while assuming it comes from model distribution *Q*
+Average surprise by observing random variable with real distribution $P$ while assuming it comes from model distribution _Q_
 
 $$H(P, Q) = \sum_s p_s log(\frac{1}{q_s})$$
 We get $p_s$ from our observations: How often we see the state
@@ -243,7 +243,8 @@ $$
  &= \sum_s p_s log(\frac{p_s}{q_s})
 \end{aligned}
 $$
-This is also called the *KL-Divergence*
+
+This is also called the _KL-Divergence_
 
 Using Jensen's inequality which says:
 

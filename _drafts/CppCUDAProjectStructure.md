@@ -14,6 +14,7 @@ Everyone either wants, needs or has GPUs now. My workplace has already acquired 
 # The Development Environment
 
 Here is the bash script to setup the development environment on Ubuntu (assuming the NVIDIA drivers are already installed)
+
 ```
 #!/bin/bash
 
@@ -36,21 +37,24 @@ sudo apt-get -y install cuda-toolkit
 ```
 
 Then add the following to your `~/.bashrc`:
+
 ```
 export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ```
 
 Either source `~/.bashrc` or open a new terminal to verify installation with:
-* `nvidia-smi`
-* `nvcc --version`
-* `cuda-gdb --version`
+
+- `nvidia-smi`
+- `nvcc --version`
+- `cuda-gdb --version`
 
 ## VS Code setup
 
 Install the following extensions:
-* [C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
-* [Nsight Visual Studio Code Edition](https://marketplace.visualstudio.com/items?itemName=NVIDIA.nsight-vscode-edition)
+
+- [C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
+- [Nsight Visual Studio Code Edition](https://marketplace.visualstudio.com/items?itemName=NVIDIA.nsight-vscode-edition)
 
 # The Project Structure
 
@@ -78,16 +82,17 @@ After some trial and error, I ended up setting up my project as follows (toy exa
 
 The structure needs some explanation:
 
-* A C++ CUDA code consists of kernels which are the parallel parts of the code that each thread in the GPU executes.
-* These kernels are called by the host side functions
+- A C++ CUDA code consists of kernels which are the parallel parts of the code that each thread in the GPU executes.
+- These kernels are called by the host side functions
 
-When compiling a C++ code, the header files are literal insertions of code snippets into the file that includes them, and the src files are used to create the build objects. All CUDA source files must have `.cu`extension. If not, plain `.cpp`files are compiled by `CXX`compiler which will fail when it encounters code sections with things like `__global__`, `<<<>>>`, and other CUDA specific syntax. In my current structure, I separate the kernels from the API. Kernels are called by functions in the API which are exposed to the user of the library. 
+When compiling a C++ code, the header files are literal insertions of code snippets into the file that includes them, and the src files are used to create the build objects. All CUDA source files must have `.cu`extension. If not, plain `.cpp`files are compiled by `CXX`compiler which will fail when it encounters code sections with things like `__global__`, `<<<>>>`, and other CUDA specific syntax. In my current structure, I separate the kernels from the API. Kernels are called by functions in the API which are exposed to the user of the library.
 
 The tests are linked to my developed library and it can be just `.cpp`files as tests don't have any CUDA syntax (the header of the library API doesn't have any CUDA code. To achieve this, its important to note that all the headers needed for implementation must be included in the cpp file and not header file). They instead use the host API to delegate work to the GPU.
 
 # CMakeLists templates
 
 ## root:
+
 ```
 cmake_minimum_required(VERSION 3.20)
 project(SSALib LANGUAGES CXX CUDA)
@@ -130,6 +135,7 @@ install(FILES
 ```
 
 ## src:
+
 ```
 # -----------------------------
 # Collect source files automatically
@@ -210,6 +216,7 @@ install(EXPORT ssalibTargets
 ```
 
 ## test
+
 ```
 Include(FetchContent)
 
@@ -251,9 +258,10 @@ catch_discover_tests(tests)
 ```
 
 ## Notes:
-* Organising CUDA code into multiple files is good for maintainability and extensibility. But to compile them, we need to use `CUDA_SEPARABLE_COMPILATION` and `POSITION_INDEPENDENT_CODE`. 
-* `CUDA_SEPARABLE_COMPILATION` allows code units in one `.cu` files to call functions from other `.cu` files. But this comes with some overhead. Particularly, extra registers get used when separable compilation is used. If we really care about performance, we should put all the code that is required by a `.cu` locally. Since perrformance is the primary objective, NVIDIA has made it an option instead of making it the default behavior
-* For debugging, CUDA code requies `-G` flag. So add both `-g` and `-G` to debug host and device code
+
+- Organising CUDA code into multiple files is good for maintainability and extensibility. But to compile them, we need to use `CUDA_SEPARABLE_COMPILATION` and `POSITION_INDEPENDENT_CODE`.
+- `CUDA_SEPARABLE_COMPILATION` allows code units in one `.cu` files to call functions from other `.cu` files. But this comes with some overhead. Particularly, extra registers get used when separable compilation is used. If we really care about performance, we should put all the code that is required by a `.cu` locally. Since perrformance is the primary objective, NVIDIA has made it an option instead of making it the default behavior
+- For debugging, CUDA code requies `-G` flag. So add both `-g` and `-G` to debug host and device code
 
 # Setting up debugger for CUDA in VS Code
 
@@ -261,47 +269,47 @@ The Nsight Visual Studio Code Edition extension provides the necessary interface
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        
-        {
-            "name": "CUDA C++: Launch",
-            "type": "cuda-gdb",
-            "request": "launch",
-            "program": "${command:cmake.launchTargetPath}",
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false
-        },
-        {
-            "name": "CUDA C++: Attach",
-            "type": "cuda-gdb",
-            "request": "attach"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CUDA C++: Launch",
+      "type": "cuda-gdb",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    },
+    {
+      "name": "CUDA C++: Attach",
+      "type": "cuda-gdb",
+      "request": "attach"
+    }
+  ]
 }
 ```
 
-You can then set break points in the editor and start debugging. 
+You can then set break points in the editor and start debugging.
 
 ## Note:
+
 When using CMakeTools extension, we get build and debug tool icons in the bottom bar of VS Code. That debug doesn't launch CUDA debugger. Instead, use the `Select and Start Debug Configuration`
 
-{% include figure.liquid 
-    path="assets/img/post/2026-01-04_1.jpg" 
-    class="img-fluid rounded z-depth-1" 
-    title="VS Code CUDA debugging" 
-    caption="Launch CUDA debugger using the launch configuration" 
+{% include figure.liquid
+    path="assets/img/post/2026-01-04_1.jpg"
+    class="img-fluid rounded z-depth-1"
+    title="VS Code CUDA debugging"
+    caption="Launch CUDA debugger using the launch configuration"
 %}
 
 We can then step through the code as usual. The difference between CUDA debugger and regular debugger is that it allows us to set focus on a particular thread when we are within the kernel. This is an incredibly useful feature. See the image below:
 
-{% include figure.liquid 
-    path="assets/img/post/2026-01-04_2.png" 
-    class="img-fluid rounded z-depth-1" 
-    title="Changing the focus to a particular thread" 
-    caption="CUDA debugger focus" 
+{% include figure.liquid
+    path="assets/img/post/2026-01-04_2.png"
+    class="img-fluid rounded z-depth-1"
+    title="Changing the focus to a particular thread"
+    caption="CUDA debugger focus"
 %}
 
 # Done!
 
-With this, we have a basic project setup. I hope to experiment with profiling the CUDA code in my project and documenting it here sometime. 
+With this, we have a basic project setup. I hope to experiment with profiling the CUDA code in my project and documenting it here sometime.
