@@ -1496,4 +1496,12 @@ figure.cover {
 
 mjx-container[jax="CHTML"][display="true"] {
   overflow-x: auto;
+  overflow-y: hidden; // tall equations otherwise get a vertical scrollbar
+}
+
+// Centre raw <img> tags in post bodies
+.post article img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

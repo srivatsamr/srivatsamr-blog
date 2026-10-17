@@ -11,3 +11,5 @@ _scripts/*
 # Lock files are machine-generated; don't hand-format
 package-lock.json
 pixi.lock
+# Posts contain LaTeX that prettier reflows into broken math
+_posts/
