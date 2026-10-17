@@ -285,7 +285,7 @@ Consider an iterative scheme $\bar{z}_t = \frac{M\bar{z}_{t-1}}{\|M\bar{z}_{t-1}
 
 Expanding telescopically,
 $$
-\bar{z}_t = \frac{M^t \bar{z}*0}{\prod*{i=0}^{t-1} \|M\bar{z}_i\|} = \frac{M^t \bar{z}_0}{\|M^t \bar{z}_0\|} \text{ as } \bar{z}_t \text{ is unit vector}
+\bar{z}_t = \frac{M^t \bar{z}_0}{\prod_{i=0}^{t-1} \|M\bar{z}_i\|} = \frac{M^t \bar{z}_0}{\|M^t \bar{z}_0\|} \text{ as } \bar{z}_t \text{ is unit vector}
 $$
 
 $M$ has eigenvectors $\bar{v}_i \in \mathbb{R}^D$ that span $\mathbb{R}^D$.
@@ -293,20 +293,20 @@ $\therefore \bar{z}_0 = \sum_{i=1}^{D} \alpha_i \bar{v}_i$
 
 $$
 \begin{aligned}
-\bar{z}*t &= \frac{M^t \sum*{i=1}^{D} \alpha_i \bar{v}*i}{\|M^t \sum*{i=1}^{D} \alpha_i \bar{v}*i \|} = \frac{\sum*{i=1}^{D} \alpha_i M^t \bar{v}*i}{\| \sum*{i=1}^{D} \alpha_i M^t \bar{v}*i \|} = \frac{\sum*{i=1}^{D} \alpha_i \lambda_i^t \bar{v}*i}{\| \sum*{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i \|}
+\bar{z}_t &= \frac{M^t \sum_{i=1}^{D} \alpha_i \bar{v}_i}{\|M^t \sum_{i=1}^{D} \alpha_i \bar{v}_i \|} = \frac{\sum_{i=1}^{D} \alpha_i M^t \bar{v}_i}{\| \sum_{i=1}^{D} \alpha_i M^t \bar{v}_i \|} = \frac{\sum_{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i}{\| \sum_{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i \|}
 \end{aligned}
 $$
 
 If $\lambda_1 \geqslant \lambda_2 \geqslant \lambda_3 \dots \geqslant \lambda_D$
 
 $$
-\bar{z}*t = \frac{\sum*{i=1}^{D} \alpha_i \lambda_i^t \bar{v}*i}{\sqrt{\underbrace{\sum*{i=1}^{D} \alpha_i^2 \lambda_i^{2t} \|\bar{v}*i\|^2}*{\text{as } \bar{v}_i^T \bar{v}_j = 0}}}
+\bar{z}_t = \frac{\sum_{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i}{\sqrt{\underbrace{\sum_{i=1}^{D} \alpha_i^2 \lambda_i^{2t} \|\bar{v}_i\|^2}_{\text{as } \bar{v}_i^T \bar{v}_j = 0}}}
 $$
 
 Factoring out $\lambda_1^t$
 
 $$
-\bar{z}_t = \frac{\lambda_1^t (\alpha_1 \bar{v}*1 + \sum*{i=2}^{D} \alpha_i \left(\frac{\lambda_i}{\lambda_1}\right)^t \bar{v}_i)}{|\lambda_1^t| \sqrt{\alpha_1^2 \|\bar{v}*1\|^2 + \sum*{i=2}^{D} \alpha_i^2 \left(\frac{\lambda_i}{\lambda_1}\right)^{2t} \|\bar{v}_i\|^2}}
+\bar{z}_t = \frac{\lambda_1^t (\alpha_1 \bar{v}_1 + \sum_{i=2}^{D} \alpha_i \left(\frac{\lambda_i}{\lambda_1}\right)^t \bar{v}_i)}{|\lambda_1^t| \sqrt{\alpha_1^2 \|\bar{v}_1\|^2 + \sum_{i=2}^{D} \alpha_i^2 \left(\frac{\lambda_i}{\lambda_1}\right)^{2t} \|\bar{v}_i\|^2}}
 $$
 
 As $\lambda_1 > 0$, $|\lambda_1|^t = \lambda_1^t$.
