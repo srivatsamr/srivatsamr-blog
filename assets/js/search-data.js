@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{
+        },{id: "post-principal-component-analysis-getting-into-representation-learning",
+        
+          title: "Principal Component Analysis: Getting into Representation Learning",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/principal-component-analysis-getting-into-representation-learning/";
+          
+        },
+      },{
         id: 'social-cv',
         title: 'CV',
         section: 'Socials',
