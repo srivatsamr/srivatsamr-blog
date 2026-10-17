@@ -1,0 +1,89 @@
+// Definition / theorem / lemma / proof boxes with automatic numbering.
+// Usage in a post:
+//   <div class="theorem" markdown="1">
+//   Statement with $math$.
+//   </div>
+// Add a title with data-title: <div class="theorem" data-title="Bayes" markdown="1">
+
+.definition,
+.theorem,
+.lemma,
+.proposition,
+.proof {
+  margin: 1.5em 0;
+  padding: 1em;
+  border-left: 5px solid var(--global-theme-color);
+  background-color: var(--global-code-bg-color);
+
+  &::before {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Counters are per type and reset on each page (one post per page).
+body {
+  counter-reset: definition theorem lemma proposition;
+}
+
+.definition {
+  counter-increment: definition;
+  &::before {
+    content: "Definition " counter(definition);
+  }
+  &[data-title]::before {
+    content: "Definition " counter(definition) " (" attr(data-title) ")";
+  }
+}
+
+.theorem {
+  counter-increment: theorem;
+  &::before {
+    content: "Theorem " counter(theorem);
+  }
+  &[data-title]::before {
+    content: "Theorem " counter(theorem) " (" attr(data-title) ")";
+  }
+}
+
+.lemma {
+  counter-increment: lemma;
+  &::before {
+    content: "Lemma " counter(lemma);
+  }
+  &[data-title]::before {
+    content: "Lemma " counter(lemma) " (" attr(data-title) ")";
+  }
+}
+
+.proposition {
+  counter-increment: proposition;
+  &::before {
+    content: "Proposition " counter(proposition);
+  }
+  &[data-title]::before {
+    content: "Proposition " counter(proposition) " (" attr(data-title) ")";
+  }
+}
+
+// Proofs are unnumbered, dashed, and end with a QED mark.
+.proof {
+  border-left-style: dashed;
+  background-color: transparent;
+
+  &::before {
+    content: "Proof";
+    font-style: italic;
+  }
+
+  &::after {
+    content: "\220E";
+    display: block;
+    text-align: right;
+  }
+}
