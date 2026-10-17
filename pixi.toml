@@ -4,12 +4,10 @@ name = "srivatsamr-blog"
 platforms = ["linux-64"]
 version = "0.1.0"
 
-[tasks]
-setup = "gem install bundler jekyll && bundle install"
-serve = "bundle exec jekyll serve"
-serve-drafts = "bundle exec jekyll serve --drafts"
-
-[dependencies]
+# ---------------------------------------------------------------------------
+# blog: Jekyll site toolchain (Ruby, Node, image tooling, pre-commit)
+# ---------------------------------------------------------------------------
+[feature.blog.dependencies]
 compilers = "*"
 make = "*"
 pkg-config = "*"
@@ -20,3 +18,29 @@ ruby = "*"
 imagemagick = "*"
 nodejs = "*"
 pre-commit = ">=4.6.2,<5"
+
+[feature.blog.tasks]
+setup = "gem install bundler jekyll && bundle install"
+serve = "bundle exec jekyll serve"
+serve-drafts = "bundle exec jekyll serve --drafts"
+
+# ---------------------------------------------------------------------------
+# mycode: Python for the code/plots that accompany posts
+# ---------------------------------------------------------------------------
+[feature.mycode.dependencies]
+python = "3.14.*"
+numpy = "*"
+matplotlib = "*"
+plotly = "*"
+ipykernel = "*"
+nbformat = "*"
+jupyterlab = "*"
+
+# ---------------------------------------------------------------------------
+# Environments (independent; neither pulls in the default feature)
+#   pixi run -e blog serve
+#   pixi run -e mycode python script.py
+# ---------------------------------------------------------------------------
+[environments]
+blog = { features = ["blog"], no-default-feature = true }
+mycode = { features = ["mycode"], no-default-feature = true }
