@@ -168,14 +168,14 @@ $$\begin{equation}
   $\implies \lambda \bar{v}^T \bar{u} = \mu \bar{v}^T \bar{u} \implies (\lambda - \mu) \bar{v}^T \bar{u} = 0$. $\lambda \neq \mu \implies \bar{v}^T \bar{u} = 0$
   Symmetric matrix has orthogonal eigenvectors.
 
-* If we use the definition of $M = \frac{x x^T}{N}$, we have
-  $$\bar{v}^T M \bar{v} = \bar{v}^T \frac{x x^T}{N} \bar{v} = \frac{1}{N} (x^T \bar{v})^T (x^T \bar{v})$$
-  $$= \frac{1}{N} \| x^T \bar{v} \|^2 \geqslant 0$$
+* If we use the definition of $M = \frac{X X^T}{N}$, we have
+  $$\bar{v}^T M \bar{v} = \bar{v}^T \frac{X X^T}{N} \bar{v} = \frac{1}{N} (X^T \bar{v})^T (X^T \bar{v})$$
+  $$= \frac{1}{N} \| X^T \bar{v} \|^2 \geqslant 0$$
 For eigenvector, $M \bar{v} = \lambda \bar{v} \Rightarrow \bar{v}^T M \bar{v} = \bar{v}^T \lambda \bar{v} = \lambda \| \bar{v} \|^2$
 $$\lambda \| \bar{v} \|^2 \geqslant 0 \Rightarrow \lambda \geqslant 0$$
 So $M$ is Positive Semidefinite and all the eigenvalues are $\geqslant 0$
 
-* What do 0 eigenvalues mean? We proved that real symmetric positive semidefinite matrix has real eigenvalues $\geqslant 0$, and corresponding real orthogonal eigenvectors. $M = \frac{x x^T}{N} \in \mathbb{R}^{D \times D}$. So the $D$ eigenvectors span the whole of $\mathbb{R}^D$. Any vector $\bar{\alpha}$ in $\mathbb{R}^D$ can be written as $\sum_{i=1}^D \alpha_i \bar{v}_i$. If $M$ has zero eigenvalues, $M \bar{\alpha} = M \sum_{i=1}^D \alpha_i \bar{v}_i = \sum_{i=1}^D \alpha_i M \bar{v}_i$. The terms involving eigenvectors corresponding to $0$ eigenvalues vanish as $M \bar{v} = \lambda \bar{v} = 0$. So $M$ collapses dimensions.
+* What do 0 eigenvalues mean? We proved that real symmetric positive semidefinite matrix has real eigenvalues $\geqslant 0$, and corresponding real orthogonal eigenvectors. $M = \frac{X X^T}{N} \in \mathbb{R}^{D \times D}$. So the $D$ eigenvectors span the whole of $\mathbb{R}^D$. Any vector $\bar{\alpha}$ in $\mathbb{R}^D$ can be written as $\sum_{i=1}^D \alpha_i \bar{v}_i$. If $M$ has zero eigenvalues, $M \bar{\alpha} = M \sum_{i=1}^D \alpha_i \bar{v}_i = \sum_{i=1}^D \alpha_i M \bar{v}_i$. The terms involving eigenvectors corresponding to $0$ eigenvalues vanish as $M \bar{v} = \lambda \bar{v} = 0$. So $M$ collapses dimensions.
 How many zero eigenvalues therefore tell us the dimension of nullspace of $M$. From rank-nullity theorem, if no. of zero eigenvalues = nullity = $n$, $n + \text{rank} = D \Rightarrow \text{rank}(M) = D - n$
 
 ### Optimization with Equality Constraint:
@@ -200,7 +200,7 @@ $$\nabla_{\lambda} \mathcal{L} = g = 0$$
 
 ### Finding a solution
 
-$$\underset{U}{\text{maximize }} \text{trace} \left( U^T \underbrace{XX^T}_{M} U \right)$$
+$$\underset{U}{\text{maximize }} \text{trace} \left( U^T \underbrace{\frac{XX^T}{N}}_{M} U \right)$$
 $$\text{subject to } U^T U = I$$
 
 Let $U = [\bar{u}_1, \bar{u}_2 \dots \bar{u}_d]$. Then:
@@ -285,7 +285,7 @@ Consider an iterative scheme $\bar{z}_t = \frac{M\bar{z}_{t-1}}{\|M\bar{z}_{t-1}
 
 Expanding telescopically,
 $$
-\bar{z}_t = \frac{M^t \bar{z}_0}{\prod_{i=0}^{t-1} \|M\bar{z}_i\|} = \frac{M^t \bar{z}_0}{\|M^t \bar{z}_0\|} \text{ as } \bar{z}_t \text{ is unit vector}
+\bar{z}_t = \frac{M^t \bar{z}*0}{\prod*{i=0}^{t-1} \|M\bar{z}_i\|} = \frac{M^t \bar{z}_0}{\|M^t \bar{z}_0\|} \text{ as } \bar{z}_t \text{ is unit vector}
 $$
 
 $M$ has eigenvectors $\bar{v}_i \in \mathbb{R}^D$ that span $\mathbb{R}^D$.
@@ -293,20 +293,20 @@ $\therefore \bar{z}_0 = \sum_{i=1}^{D} \alpha_i \bar{v}_i$
 
 $$
 \begin{aligned}
-\bar{z}_t &= \frac{M^t \sum_{i=1}^{D} \alpha_i \bar{v}_i}{\|M^t \sum_{i=1}^{D} \alpha_i \bar{v}_i \|} = \frac{\sum_{i=1}^{D} \alpha_i M^t \bar{v}_i}{\| \sum_{i=1}^{D} \alpha_i M^t \bar{v}_i \|} = \frac{\sum_{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i}{\| \sum_{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i \|}
+\bar{z}*t &= \frac{M^t \sum*{i=1}^{D} \alpha_i \bar{v}*i}{\|M^t \sum*{i=1}^{D} \alpha_i \bar{v}*i \|} = \frac{\sum*{i=1}^{D} \alpha_i M^t \bar{v}*i}{\| \sum*{i=1}^{D} \alpha_i M^t \bar{v}*i \|} = \frac{\sum*{i=1}^{D} \alpha_i \lambda_i^t \bar{v}*i}{\| \sum*{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i \|}
 \end{aligned}
 $$
 
 If $\lambda_1 \geqslant \lambda_2 \geqslant \lambda_3 \dots \geqslant \lambda_D$
 
 $$
-\bar{z}_t = \frac{\sum_{i=1}^{D} \alpha_i \lambda_i^t \bar{v}_i}{\sqrt{\underbrace{\sum_{i=1}^{D} \alpha_i^2 \lambda_i^{2t} \|\bar{v}_i\|^2}_{\text{as } \bar{v}_i^T \bar{v}_j = 0}}}
+\bar{z}*t = \frac{\sum*{i=1}^{D} \alpha_i \lambda_i^t \bar{v}*i}{\sqrt{\underbrace{\sum*{i=1}^{D} \alpha_i^2 \lambda_i^{2t} \|\bar{v}*i\|^2}*{\text{as } \bar{v}_i^T \bar{v}_j = 0}}}
 $$
 
 Factoring out $\lambda_1^t$
 
 $$
-\bar{z}_t = \frac{\lambda_1^t (\alpha_1 \bar{v}_1 + \sum_{i=2}^{D} \alpha_i \left(\frac{\lambda_i}{\lambda_1}\right)^t \bar{v}_i)}{|\lambda_1^t| \sqrt{\alpha_1^2 \|\bar{v}_1\|^2 + \sum_{i=2}^{D} \alpha_i^2 \left(\frac{\lambda_i}{\lambda_1}\right)^{2t} \|\bar{v}_i\|^2}}
+\bar{z}_t = \frac{\lambda_1^t (\alpha_1 \bar{v}*1 + \sum*{i=2}^{D} \alpha_i \left(\frac{\lambda_i}{\lambda_1}\right)^t \bar{v}_i)}{|\lambda_1^t| \sqrt{\alpha_1^2 \|\bar{v}*1\|^2 + \sum*{i=2}^{D} \alpha_i^2 \left(\frac{\lambda_i}{\lambda_1}\right)^{2t} \|\bar{v}_i\|^2}}
 $$
 
 As $\lambda_1 > 0$, $|\lambda_1|^t = \lambda_1^t$.
