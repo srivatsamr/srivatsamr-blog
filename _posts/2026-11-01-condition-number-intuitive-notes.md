@@ -87,11 +87,16 @@ M = V \Lambda V^T &\Rightarrow \det(V \Lambda V^T - x I) = 0 \\
 \end{aligned}
 $$
 
-$\det(A B) = \det(A) \det(B)$ when $A$ & $B$ are square
-$\det(V^T V) = \det(V V^T) = \det(I) = 1$
-$\det(V^T) \det(V) = \det(V) \det(V^T) = 1$
-$\det(V) = \det(V^T) \Rightarrow \det(V) = \pm 1$
-$\therefore \det(V (\Lambda - x I) V^T) = \det(\Lambda - x I) = 0$
+Using $\det(AB) = \det(A)\det(B)$ when $A$ and $B$ are square:
+
+$$
+\begin{aligned}
+\det(V^T V) = \det(V V^T) = \det(I) &= 1 \\
+\det(V^T)\det(V) = \det(V)\det(V^T) &= 1 \\
+\det(V) = \det(V^T) &\Rightarrow \det(V) = \pm 1 \\
+\therefore \det\big(V (\Lambda - x I) V^T\big) &= \det(\Lambda - x I) = 0
+\end{aligned}
+$$
 
 $$
 \Rightarrow \prod(\lambda_i - x) = 0
